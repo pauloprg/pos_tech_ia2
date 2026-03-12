@@ -33,15 +33,15 @@ def draw_route_lines(screen: pygame.Surface, points: list[ServicePoint]) -> None
         return
 
     for i in range(len(points) - 1):
-        start = points[i].position()
-        end = points[i + 1].position()
+        start = points[i].posicao()
+        end = points[i + 1].posicao()
         pygame.draw.line(screen, PURPLE, start, end, 2)
 
 
 def draw_service_points(screen: pygame.Surface, points: list[ServicePoint], font: pygame.font.Font) -> None:
     for point in points:
         color = get_priority_color(point.prioridade)
-        pygame.draw.circle(screen, color, point.position(), 7)
+        pygame.draw.circle(screen, color, point.posicao(), 7)
         label = font.render(str(point.id), True, BLACK)
         screen.blit(label, (point.x + 8, point.y - 8))
 
@@ -112,7 +112,7 @@ def draw_side_panel(
         draw_colored_bullet(screen, panel_x + 22, y + 7, color, radius=5)
 
         line = (
-            f"{idx}. P{point.id} | {point.regiao_adm} | "
+            f"{idx}. P{point.id} | "
             f"{tipo} | {point.tempo_inicio}-{point.tempo_fim}h"
         )
 
