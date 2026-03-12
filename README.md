@@ -242,53 +242,9 @@ Ao executar o sistema, será aberta uma janela contendo:
 
 ---
 
-# Melhorias Futuras
-
-O projeto pode ser expandido com diversas funcionalidades adicionais:
-
-### Implementação completa de Algoritmos Genéticos
-
-- seleção
-- crossover
-- mutação
-- elitismo
-- evolução da população
+Este projeto foi desenvolvido como parte do **Tech Challenge Fase 2**, com foco na aplicação de **otimização de rotas para atendimento especializado à mulher**, especificamente voltados ao atendimento e à segurança da mulher.
 
 ---
-
-### Restrições adicionais
-
-- limite de carga do veículo
-- limite de distância percorrida
-- janelas de horário obrigatórias
-- múltiplos veículos
-
----
-
-### Integração com dados reais
-
-- hospitais do DF
-- postos de saúde
-- distribuição geográfica da população
-
----
-
-### Integração com APIs externas
-
-Possibilidades de evolução:
-
-- Google Maps
-- OpenStreetMap
-- APIs de roteamento
-
----
-
-# Contexto Acadêmico
-
-Este projeto foi desenvolvido como parte do **Tech Challenge Fase 2**, com foco na aplicação de **otimização de rotas para atendimento especializado à mulher **, especificamente voltados ao atendimento e à segurança da mulher.
-
----
-
 
 # Licença
 
