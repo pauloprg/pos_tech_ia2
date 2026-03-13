@@ -63,12 +63,26 @@ def draw_side_panel(
     window_height: int,
     title_font: pygame.font.Font,
     text_font: pygame.font.Font,
-    route: list[ServicePoint]
+    route: list[ServicePoint],
+    generation: int,
+    best_fitness: float
 ) -> None:
     pygame.draw.rect(screen, GRAY, (panel_x, 0, panel_width, window_height))
 
     title = title_font.render("Rota em tempo real", True, BLACK)
     screen.blit(title, (panel_x + 16, 16))
+    
+    info_lines = [
+        f"Geração: {generation}",
+        f"Melhor fitness: {best_fitness:.2f}",
+        ""
+    ]
+    
+    y = 48
+    for line in info_lines:
+        text_surface = text_font.render(line, True, BLACK)
+        screen.blit(text_surface, (panel_x + 16, y))
+        y += 18
 
     # LEGENDA COM CORES
     LEGENDAS = [
@@ -79,20 +93,19 @@ def draw_side_panel(
     ]
 
     legend_title = text_font.render("Prioridades:", True, BLACK)
-    screen.blit(legend_title, (panel_x + 16, 52))
+    screen.blit(legend_title, (panel_x + 16, y))
+    y += 22
 
-    y = 78
     for prioridade, text_line in LEGENDAS:
         color = get_priority_color(prioridade)
 
         # bolinha colorida
-        draw_colored_bullet(screen, panel_x + 22, y + 7, color, radius=5)
+        draw_colored_bullet(screen, panel_x + 22, y + 6, color, radius=5)
 
         # texto da legenda
         text_surface = text_font.render(text_line, True, BLACK)
         screen.blit(text_surface, (panel_x + 36, y))
-
-        y += 22
+        y += 18
 
     y += 10
 
@@ -102,6 +115,10 @@ def draw_side_panel(
         "Medicamento hormonal": "Medicamento hormonal",
         "Pós-parto": "Pós-parto",
     }
+    
+    route_title = text_font.render("Melhor rota atual:", True, BLACK)
+    screen.blit(route_title, (panel_x + 16, y))
+    y += 22
 
     # LISTA DA ROTA COM BOLINHA DA MESMA COR DO MAPA
     for idx, point in enumerate(route, start=1):
@@ -109,7 +126,7 @@ def draw_side_panel(
         color = get_priority_color(point.prioridade)
 
         # bolinha colorida ao lado do item da rota
-        draw_colored_bullet(screen, panel_x + 22, y + 7, color, radius=5)
+        draw_colored_bullet(screen, panel_x + 22, y + 6, color, radius=5)
 
         line = (
             f"{idx}. P{point.id} | "
@@ -118,4 +135,7 @@ def draw_side_panel(
 
         line_surface = text_font.render(line, True, BLACK)
         screen.blit(line_surface, (panel_x + 36, y))
-        y += 18
+        y += 17
+        
+        if y > window_height - 20:
+            break
