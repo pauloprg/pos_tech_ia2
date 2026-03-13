@@ -110,9 +110,9 @@ def draw_side_panel(
     y += 10
 
     TIPOS_ATENDIMENTOS = {
-        "Emergência obstétrica": "Emergência obstétrica",
-        "Violência doméstica": "Violência doméstica",
-        "Medicamento hormonal": "Medicamento hormonal",
+        "Emergência obstétrica": "Emerg. obstétrica",
+        "Violência doméstica": "Viol. doméstica",
+        "Medicamento hormonal": "Med. hormonal",
         "Pós-parto": "Pós-parto",
     }
     
@@ -129,8 +129,8 @@ def draw_side_panel(
         draw_colored_bullet(screen, panel_x + 22, y + 6, color, radius=5)
 
         line = (
-            f"{idx}. P{point.id} | "
-            f"{tipo} | {point.tempo_inicio}-{point.tempo_fim}h"
+            f"{idx}. P{point.id} {point.codigo} | "
+            f"{tipo} | D:{point.quantidade} | T:{point.tempo_atendimento:.1f}h"
         )
 
         line_surface = text_font.render(line, True, BLACK)

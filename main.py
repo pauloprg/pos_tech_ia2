@@ -31,7 +31,7 @@ PANEL_WIDTH = WINDOW_WIDTH - MAP_WIDTH
 FPS = 15
 N_POINTS = 50
 
-POPULATION_SIZE = 120
+POPULATION_SIZE = 100
 MUTATION_PROBABILITY = 0.20
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -41,19 +41,18 @@ MAP_PATH = os.path.join(BASE_DIR, "assets", "Mapa_DF.png")
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption("Saúde da Mulher no DF - Roteirização Inicial")
+    pygame.display.set_caption("Saúde da Mulher no DF")
     clock = pygame.time.Clock()
 
     title_font = pygame.font.SysFont("arial", 20, bold=True)
-    text_font = pygame.font.SysFont("arial", 10)
-    small_font = pygame.font.SysFont("arial", 11)
+    text_font = pygame.font.SysFont("arial", 11)
+    small_font = pygame.font.SysFont("arial", 10)
 
     map_surface = load_and_scale_map(MAP_PATH, MAP_WIDTH, MAP_HEIGHT)
     valid_positions = build_valid_positions(map_surface)
 
     service_points = generate_service_points(valid_positions=valid_positions,
         n_points=N_POINTS)
-#    current_route = create_initial_route(service_points)
     
     population = generate_random_population(service_points, POPULATION_SIZE)
     generation = 0
@@ -98,7 +97,7 @@ def main():
         )
 
         footer = text_font.render(
-            "Tech 2: otimização de rotas com algoritmo genético",
+            "Tech Challenge fase 2: otimização de rotas com algoritmo genético",
             True,
             (20, 20, 20)
         )

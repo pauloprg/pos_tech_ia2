@@ -14,6 +14,8 @@ from pontos import ServicePoint
 CAPACIDADE = 25
 HORARIO_INICIO = 8
 FATOR_TEMPO = 0.03
+PENALIDADE_TEMPERATURA = 180
+ESPERA_PROT_ESPECIAL = 1.5
 
 
 def euclidean_distance(p1: ServicePoint, p2: ServicePoint) -> float:
@@ -31,22 +33,24 @@ def route_distance(route: List[ServicePoint]) -> float:
 
 
 def priority_penalty(point: ServicePoint, current_time: float) -> float:
-    """
-    Penaliza atrasos de acordo com a prioridade.
-    Quanto maior a prioridade, maior a penalidade pelo atraso.
-    """
     if current_time <= point.tempo_fim:
         return 0.0
 
     delay = current_time - point.tempo_fim
 
     if point.prioridade == 4:
-        return delay * 300
-    if point.prioridade == 3:
-        return delay * 180
-    if point.prioridade == 2:
-        return delay * 100
-    return delay * 60
+        base_penalty = delay * 300
+    elif point.prioridade == 3:
+        base_penalty = delay * 180
+    elif point.prioridade == 2:
+        base_penalty = delay * 100
+    else:
+        base_penalty = delay * 60
+
+    if point.protocolo_especial:
+        base_penalty *= ESPERA_PROT_ESPECIAL
+
+    return base_penalty
 
 
 def time_window_penalty(point: ServicePoint, current_time: float) -> float:
@@ -74,6 +78,16 @@ def capacity_penalty(route: List[ServicePoint]) -> float:
     return excess * 250
 
 
+def refrigeration_penalty(point: ServicePoint, travel_segment_time: float) -> float:
+    if not point.temperatura_controlada:
+        return 0.0
+
+    if travel_segment_time <= 2.5:
+        return 0.0
+
+    return (travel_segment_time - 2.5) * PENALIDADE_TEMPERATURA
+
+
 def calculate_fitness(route: List[ServicePoint]) -> float:
     """
     Quanto menor o fitness, melhor a rota.
@@ -90,8 +104,10 @@ def calculate_fitness(route: List[ServicePoint]) -> float:
 
         if i > 0:
             dist = euclidean_distance(route[i - 1], point)
+            travel_time = dist * FATOR_TEMPO
             total_cost += dist
-            current_time += dist * FATOR_TEMPO
+            total_cost += refrigeration_penalty(point, travel_time)
+            current_time += travel_time
 
         if current_time < point.tempo_inicio:
             current_time = point.tempo_inicio
@@ -99,7 +115,7 @@ def calculate_fitness(route: List[ServicePoint]) -> float:
         total_cost += time_window_penalty(point, current_time)
         total_cost += priority_penalty(point, current_time)
 
-        current_time += 0.2
+        current_time += point.tempo_atendimento
 
     total_cost += capacity_penalty(route)
 
