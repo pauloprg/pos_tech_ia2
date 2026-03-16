@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<head><meta http-equiv="refresh" content="5">
+<head><meta http-equiv="refresh" content="10">
     
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
@@ -17,7 +17,7 @@
             <meta name="viewport" content="width=device-width,
                 initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
             <style>
-                #map_112bf50d9ef74a7d29c109bd74c71c24 {
+                #map_31893b34c673571c577d2e220516ce84 {
                     position: relative;
                     width: 100.0%;
                     height: 100.0%;
@@ -54,19 +54,19 @@
 <body>
     
     
-            <div class="folium-map" id="map_112bf50d9ef74a7d29c109bd74c71c24" ></div>
+            <div class="folium-map" id="map_31893b34c673571c577d2e220516ce84" ></div>
         
 </body>
 <script>
     
     
-            var map_112bf50d9ef74a7d29c109bd74c71c24 = L.map(
-                "map_112bf50d9ef74a7d29c109bd74c71c24",
+            var map_31893b34c673571c577d2e220516ce84 = L.map(
+                "map_31893b34c673571c577d2e220516ce84",
                 {
-                    center: [-15.8219, -48.1072],
+                    center: [-15.825, -48.105000000000004],
                     crs: L.CRS.EPSG3857,
                     ...{
-  "zoom": 13,
+  "zoom": 14,
   "zoomControl": true,
   "preferCanvas": false,
 }
@@ -78,7 +78,7 @@
 
         
     
-            var tile_layer_cbf3f4e79c6d3e1257276dc4f6120123 = L.tileLayer(
+            var tile_layer_08a5f8d9a8f32ad6c53d06e71680b718 = L.tileLayer(
                 "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 {
   "minZoom": 0,
@@ -95,131 +95,17 @@
             );
         
     
-            tile_layer_cbf3f4e79c6d3e1257276dc4f6120123.addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            tile_layer_08a5f8d9a8f32ad6c53d06e71680b718.addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var marker_0d7a222fe9f9c82211641442c7b1d4d5 = L.marker(
-                [-15.8304553, -48.1426266],
+            var marker_897ae166851f1770b32a9d0c8f776904 = L.marker(
+                [-15.833250597637146, -48.11372504351041],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_9094ee2c27b2e53054402f3c34d9c69e = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "orange",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_fa3178db24a242659d5b47459b1629aa = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_7b36e3ca6e4af2c570d83c4a83b60145 = $(`<div id="html_7b36e3ca6e4af2c570d83c4a83b60145" style="width: 100.0%; height: 100.0%;">Ponto 1: Violência doméstica (Prioridade 3)</div>`)[0];
-                popup_fa3178db24a242659d5b47459b1629aa.setContent(html_7b36e3ca6e4af2c570d83c4a83b60145);
-            
-        
-
-        marker_0d7a222fe9f9c82211641442c7b1d4d5.bindPopup(popup_fa3178db24a242659d5b47459b1629aa)
-        ;
-
-        
-    
-    
-                marker_0d7a222fe9f9c82211641442c7b1d4d5.setIcon(icon_9094ee2c27b2e53054402f3c34d9c69e);
-            
-    
-            var marker_a9f475e892690ad50ec0da2932438d33 = L.marker(
-                [-15.8367063, -48.054113],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_6f48269a87d9ea2ab5c9f63238ab2d42 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "red",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_cbe82844e2dbb61b86314fc30444936c = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_95314efd2352256ac5852eecdf4977a6 = $(`<div id="html_95314efd2352256ac5852eecdf4977a6" style="width: 100.0%; height: 100.0%;">Ponto 2: Emergência obstétrica (Prioridade 4)</div>`)[0];
-                popup_cbe82844e2dbb61b86314fc30444936c.setContent(html_95314efd2352256ac5852eecdf4977a6);
-            
-        
-
-        marker_a9f475e892690ad50ec0da2932438d33.bindPopup(popup_cbe82844e2dbb61b86314fc30444936c)
-        ;
-
-        
-    
-    
-                marker_a9f475e892690ad50ec0da2932438d33.setIcon(icon_6f48269a87d9ea2ab5c9f63238ab2d42);
-            
-    
-            var marker_8830c984e6d21635f72383c2068a0320 = L.marker(
-                [-15.8456813, -48.1119766],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_de848622c5a5a6567e88b1cf694736d7 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "orange",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_80c66d86b97d104d20fc72bce395d765 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_a4017b5ed27449342699acf8dab166f3 = $(`<div id="html_a4017b5ed27449342699acf8dab166f3" style="width: 100.0%; height: 100.0%;">Ponto 3: Violência doméstica (Prioridade 3)</div>`)[0];
-                popup_80c66d86b97d104d20fc72bce395d765.setContent(html_a4017b5ed27449342699acf8dab166f3);
-            
-        
-
-        marker_8830c984e6d21635f72383c2068a0320.bindPopup(popup_80c66d86b97d104d20fc72bce395d765)
-        ;
-
-        
-    
-    
-                marker_8830c984e6d21635f72383c2068a0320.setIcon(icon_de848622c5a5a6567e88b1cf694736d7);
-            
-    
-            var marker_2e54bc09a6ae9aaffe84d48d19b605a5 = L.marker(
-                [-15.8349656, -48.0514407],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_c4d4edf573e0162b8648868c57098651 = L.AwesomeMarkers.icon(
+            var icon_d49fdb5f2edab371ef118fd35ec2a821 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -230,110 +116,34 @@
             );
         
     
-        var popup_951131236d1b4dd8ea7c21a157cdff23 = L.popup({
+        var popup_a212bf2c06a39fe1960f9bf76346544d = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_ed10aafe7dc2c56aa2345b8c0ae2412a = $(`<div id="html_ed10aafe7dc2c56aa2345b8c0ae2412a" style="width: 100.0%; height: 100.0%;">Ponto 4: Medicamento hormonal (Prioridade 2)</div>`)[0];
-                popup_951131236d1b4dd8ea7c21a157cdff23.setContent(html_ed10aafe7dc2c56aa2345b8c0ae2412a);
+                var html_db360fd621930ca20a94a5bd532f1e7f = $(`<div id="html_db360fd621930ca20a94a5bd532f1e7f" style="width: 100.0%; height: 100.0%;">Ponto 1: Medicamento hormonal</div>`)[0];
+                popup_a212bf2c06a39fe1960f9bf76346544d.setContent(html_db360fd621930ca20a94a5bd532f1e7f);
             
         
 
-        marker_2e54bc09a6ae9aaffe84d48d19b605a5.bindPopup(popup_951131236d1b4dd8ea7c21a157cdff23)
+        marker_897ae166851f1770b32a9d0c8f776904.bindPopup(popup_a212bf2c06a39fe1960f9bf76346544d)
         ;
 
         
     
     
-                marker_2e54bc09a6ae9aaffe84d48d19b605a5.setIcon(icon_c4d4edf573e0162b8648868c57098651);
+                marker_897ae166851f1770b32a9d0c8f776904.setIcon(icon_d49fdb5f2edab371ef118fd35ec2a821);
             
     
-            var marker_0266e191bffd76e7612fa35a8fe63261 = L.marker(
-                [-15.8346988, -48.0568651],
+            var marker_d8ab851ea5d6090205f95e9802db5664 = L.marker(
+                [-15.847665900360832, -48.112886572760765],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_62b7c70cdd64791536040926149ab1d1 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "green",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_b33c9d04b60f1b49139b31f2623bd69b = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_a24bf3bf1bf4e5a1832e7e27196ad02b = $(`<div id="html_a24bf3bf1bf4e5a1832e7e27196ad02b" style="width: 100.0%; height: 100.0%;">Ponto 5: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_b33c9d04b60f1b49139b31f2623bd69b.setContent(html_a24bf3bf1bf4e5a1832e7e27196ad02b);
-            
-        
-
-        marker_0266e191bffd76e7612fa35a8fe63261.bindPopup(popup_b33c9d04b60f1b49139b31f2623bd69b)
-        ;
-
-        
-    
-    
-                marker_0266e191bffd76e7612fa35a8fe63261.setIcon(icon_62b7c70cdd64791536040926149ab1d1);
-            
-    
-            var marker_122e8f4e719350d8aebf5fd5b7d4c251 = L.marker(
-                [-15.8739572, -48.0727333],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_b5e451fb5df82815cbbc84c7859e86fc = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "green",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_53154c1b6b55c2e92dc7f905a8aff094 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_a31be42cae5eec959701768a61366948 = $(`<div id="html_a31be42cae5eec959701768a61366948" style="width: 100.0%; height: 100.0%;">Ponto 6: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_53154c1b6b55c2e92dc7f905a8aff094.setContent(html_a31be42cae5eec959701768a61366948);
-            
-        
-
-        marker_122e8f4e719350d8aebf5fd5b7d4c251.bindPopup(popup_53154c1b6b55c2e92dc7f905a8aff094)
-        ;
-
-        
-    
-    
-                marker_122e8f4e719350d8aebf5fd5b7d4c251.setIcon(icon_b5e451fb5df82815cbbc84c7859e86fc);
-            
-    
-            var marker_5ca9d93713e1795f6eca4fe3dd8efcbf = L.marker(
-                [-15.8316967, -48.052472],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_76d5d3f0daa143fc8ff6faca20255fc3 = L.AwesomeMarkers.icon(
+            var icon_faf0704bf7942e3d9828e4fef7e2c270 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "red",
   "iconColor": "white",
@@ -344,72 +154,34 @@
             );
         
     
-        var popup_a1d776e9caf29bdf6abce737f0022fd9 = L.popup({
+        var popup_077ff5014ae887e4c0decda8babeaf4c = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_33f835fce2ac900d11241abafb1abbec = $(`<div id="html_33f835fce2ac900d11241abafb1abbec" style="width: 100.0%; height: 100.0%;">Ponto 7: Emergência obstétrica (Prioridade 4)</div>`)[0];
-                popup_a1d776e9caf29bdf6abce737f0022fd9.setContent(html_33f835fce2ac900d11241abafb1abbec);
+                var html_a9736e42b97608d93979149df988f19b = $(`<div id="html_a9736e42b97608d93979149df988f19b" style="width: 100.0%; height: 100.0%;">Ponto 2: Emergência obstétrica</div>`)[0];
+                popup_077ff5014ae887e4c0decda8babeaf4c.setContent(html_a9736e42b97608d93979149df988f19b);
             
         
 
-        marker_5ca9d93713e1795f6eca4fe3dd8efcbf.bindPopup(popup_a1d776e9caf29bdf6abce737f0022fd9)
+        marker_d8ab851ea5d6090205f95e9802db5664.bindPopup(popup_077ff5014ae887e4c0decda8babeaf4c)
         ;
 
         
     
     
-                marker_5ca9d93713e1795f6eca4fe3dd8efcbf.setIcon(icon_76d5d3f0daa143fc8ff6faca20255fc3);
+                marker_d8ab851ea5d6090205f95e9802db5664.setIcon(icon_faf0704bf7942e3d9828e4fef7e2c270);
             
     
-            var marker_72073e2aee405a55e250ec343aeb9c9f = L.marker(
-                [-15.8360516, -48.0517181],
+            var marker_2c2fe55aba3fecd51cf702529e6f3fea = L.marker(
+                [-15.848437831387681, -48.132580248753136],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_0b5fc841da62243fd23d56dee401d882 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "red",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_f8400cefad88ffe59994e88deeb15ab1 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_8182be7886ae608ea15fbb43c4125470 = $(`<div id="html_8182be7886ae608ea15fbb43c4125470" style="width: 100.0%; height: 100.0%;">Ponto 8: Emergência obstétrica (Prioridade 4)</div>`)[0];
-                popup_f8400cefad88ffe59994e88deeb15ab1.setContent(html_8182be7886ae608ea15fbb43c4125470);
-            
-        
-
-        marker_72073e2aee405a55e250ec343aeb9c9f.bindPopup(popup_f8400cefad88ffe59994e88deeb15ab1)
-        ;
-
-        
-    
-    
-                marker_72073e2aee405a55e250ec343aeb9c9f.setIcon(icon_0b5fc841da62243fd23d56dee401d882);
-            
-    
-            var marker_08762b7b2e1ddfa1dcef5923d548ff53 = L.marker(
-                [-15.8373558, -48.0545297],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_eb03d39dac31be3b358c4e92f1f8a8e2 = L.AwesomeMarkers.icon(
+            var icon_fee022c13915d4d63e3c72fcf34ebf00 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "green",
   "iconColor": "white",
@@ -420,186 +192,34 @@
             );
         
     
-        var popup_0ef3eaac590eb0564a263099c0c919bc = L.popup({
+        var popup_46adb9c2499ba271f6bdff4ce9f65eb2 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_32b23a73e4865caf5bf9108830ca097a = $(`<div id="html_32b23a73e4865caf5bf9108830ca097a" style="width: 100.0%; height: 100.0%;">Ponto 9: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_0ef3eaac590eb0564a263099c0c919bc.setContent(html_32b23a73e4865caf5bf9108830ca097a);
+                var html_20fd0d90447bb0b757e6f6eb62bcf374 = $(`<div id="html_20fd0d90447bb0b757e6f6eb62bcf374" style="width: 100.0%; height: 100.0%;">Ponto 3: Atendimento pós-parto</div>`)[0];
+                popup_46adb9c2499ba271f6bdff4ce9f65eb2.setContent(html_20fd0d90447bb0b757e6f6eb62bcf374);
             
         
 
-        marker_08762b7b2e1ddfa1dcef5923d548ff53.bindPopup(popup_0ef3eaac590eb0564a263099c0c919bc)
+        marker_2c2fe55aba3fecd51cf702529e6f3fea.bindPopup(popup_46adb9c2499ba271f6bdff4ce9f65eb2)
         ;
 
         
     
     
-                marker_08762b7b2e1ddfa1dcef5923d548ff53.setIcon(icon_eb03d39dac31be3b358c4e92f1f8a8e2);
+                marker_2c2fe55aba3fecd51cf702529e6f3fea.setIcon(icon_fee022c13915d4d63e3c72fcf34ebf00);
             
     
-            var marker_40a700a12f45eda2c1d9a59066f64ee6 = L.marker(
-                [-15.8064899, -48.0760231],
+            var marker_0640852d7e350e8b5bc4fdb6ed95a453 = L.marker(
+                [-15.847791537556157, -48.09279185707955],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_a1cb02c45f8fc32e5e84319ff3351a8b = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "red",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_113dda8c032d0089ded2822b8e2ed359 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_9d966621fa84247e9bcde3aaa6dec0be = $(`<div id="html_9d966621fa84247e9bcde3aaa6dec0be" style="width: 100.0%; height: 100.0%;">Ponto 10: Emergência obstétrica (Prioridade 4)</div>`)[0];
-                popup_113dda8c032d0089ded2822b8e2ed359.setContent(html_9d966621fa84247e9bcde3aaa6dec0be);
-            
-        
-
-        marker_40a700a12f45eda2c1d9a59066f64ee6.bindPopup(popup_113dda8c032d0089ded2822b8e2ed359)
-        ;
-
-        
-    
-    
-                marker_40a700a12f45eda2c1d9a59066f64ee6.setIcon(icon_a1cb02c45f8fc32e5e84319ff3351a8b);
-            
-    
-            var marker_00489d093c42f9d0773bfd5eb9cd6fc5 = L.marker(
-                [-15.8356175, -48.0560153],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_ed9da00b51bc8ce78cc8cf9017f95ae3 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "red",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_f8024ac58596aa50f606314fdd43e2a4 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_80fee29e326333208955d54b63604e48 = $(`<div id="html_80fee29e326333208955d54b63604e48" style="width: 100.0%; height: 100.0%;">Ponto 11: Emergência obstétrica (Prioridade 4)</div>`)[0];
-                popup_f8024ac58596aa50f606314fdd43e2a4.setContent(html_80fee29e326333208955d54b63604e48);
-            
-        
-
-        marker_00489d093c42f9d0773bfd5eb9cd6fc5.bindPopup(popup_f8024ac58596aa50f606314fdd43e2a4)
-        ;
-
-        
-    
-    
-                marker_00489d093c42f9d0773bfd5eb9cd6fc5.setIcon(icon_ed9da00b51bc8ce78cc8cf9017f95ae3);
-            
-    
-            var marker_79126baf581270f7b1815cc4a3b9c95b = L.marker(
-                [-15.8821505, -48.0897198],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_68795056ce57ab24b2b6688541e85086 = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "green",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_4ac86308f2f075fd1a0e293b3fb59498 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_461215c648ecd2beab4f1f66a715f6b5 = $(`<div id="html_461215c648ecd2beab4f1f66a715f6b5" style="width: 100.0%; height: 100.0%;">Ponto 12: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_4ac86308f2f075fd1a0e293b3fb59498.setContent(html_461215c648ecd2beab4f1f66a715f6b5);
-            
-        
-
-        marker_79126baf581270f7b1815cc4a3b9c95b.bindPopup(popup_4ac86308f2f075fd1a0e293b3fb59498)
-        ;
-
-        
-    
-    
-                marker_79126baf581270f7b1815cc4a3b9c95b.setIcon(icon_68795056ce57ab24b2b6688541e85086);
-            
-    
-            var marker_ca966e75c45660da9db895373af42c0c = L.marker(
-                [-15.8303533, -48.1416298],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_5a2bf834f730b90d6fab93c9126a7a1f = L.AwesomeMarkers.icon(
-                {
-  "markerColor": "green",
-  "iconColor": "white",
-  "icon": "info-sign",
-  "prefix": "glyphicon",
-  "extraClasses": "fa-rotate-0",
-}
-            );
-        
-    
-        var popup_764b2754fc5f777949d9145247b435e8 = L.popup({
-  "maxWidth": "100%",
-});
-
-        
-            
-                var html_001150b5cde9a3d4b58f25f5bf94ab3b = $(`<div id="html_001150b5cde9a3d4b58f25f5bf94ab3b" style="width: 100.0%; height: 100.0%;">Ponto 13: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_764b2754fc5f777949d9145247b435e8.setContent(html_001150b5cde9a3d4b58f25f5bf94ab3b);
-            
-        
-
-        marker_ca966e75c45660da9db895373af42c0c.bindPopup(popup_764b2754fc5f777949d9145247b435e8)
-        ;
-
-        
-    
-    
-                marker_ca966e75c45660da9db895373af42c0c.setIcon(icon_5a2bf834f730b90d6fab93c9126a7a1f);
-            
-    
-            var marker_7af2931c4da2df7cb654a7b9c94ae78d = L.marker(
-                [-15.8474725, -48.1151962],
-                {
-}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var icon_48bdeafb1c5e6114d8c62926423e64e7 = L.AwesomeMarkers.icon(
+            var icon_50734f6b1f46eea0ed3c56b9ff1e2da2 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "blue",
   "iconColor": "white",
@@ -610,34 +230,262 @@
             );
         
     
-        var popup_8ee7892deb1b45780ef7a82f40fddd98 = L.popup({
+        var popup_518cc6191c44c10774f435a7351afa49 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_fbc1b816f10b853f7f45f5d0b9254fbe = $(`<div id="html_fbc1b816f10b853f7f45f5d0b9254fbe" style="width: 100.0%; height: 100.0%;">Ponto 14: Medicamento hormonal (Prioridade 2)</div>`)[0];
-                popup_8ee7892deb1b45780ef7a82f40fddd98.setContent(html_fbc1b816f10b853f7f45f5d0b9254fbe);
+                var html_851f9579f9d3a87626a347806b564d00 = $(`<div id="html_851f9579f9d3a87626a347806b564d00" style="width: 100.0%; height: 100.0%;">Ponto 4: Medicamento hormonal</div>`)[0];
+                popup_518cc6191c44c10774f435a7351afa49.setContent(html_851f9579f9d3a87626a347806b564d00);
             
         
 
-        marker_7af2931c4da2df7cb654a7b9c94ae78d.bindPopup(popup_8ee7892deb1b45780ef7a82f40fddd98)
+        marker_0640852d7e350e8b5bc4fdb6ed95a453.bindPopup(popup_518cc6191c44c10774f435a7351afa49)
         ;
 
         
     
     
-                marker_7af2931c4da2df7cb654a7b9c94ae78d.setIcon(icon_48bdeafb1c5e6114d8c62926423e64e7);
+                marker_0640852d7e350e8b5bc4fdb6ed95a453.setIcon(icon_50734f6b1f46eea0ed3c56b9ff1e2da2);
             
     
-            var marker_e19f431897ab64d9a0205db1c11efe91 = L.marker(
-                [-15.8426281, -48.1047045],
+            var marker_0556cec45da753085d0241ebf038b7f9 = L.marker(
+                [-15.849819443630166, -48.13976912552022],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_9ddecd1fa77a725d1b8d09efa2f9f069 = L.AwesomeMarkers.icon(
+            var icon_11327cb44d555e91b76d0dcf8c5cdb6b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4b8e987484be05c42c6fb2e3a6326245 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d157f890a39e66cb686eaa939316f872 = $(`<div id="html_d157f890a39e66cb686eaa939316f872" style="width: 100.0%; height: 100.0%;">Ponto 5: Violência doméstica</div>`)[0];
+                popup_4b8e987484be05c42c6fb2e3a6326245.setContent(html_d157f890a39e66cb686eaa939316f872);
+            
+        
+
+        marker_0556cec45da753085d0241ebf038b7f9.bindPopup(popup_4b8e987484be05c42c6fb2e3a6326245)
+        ;
+
+        
+    
+    
+                marker_0556cec45da753085d0241ebf038b7f9.setIcon(icon_11327cb44d555e91b76d0dcf8c5cdb6b);
+            
+    
+            var marker_dae7ba147465e14d763d909cc2817ded = L.marker(
+                [-15.836345583918382, -48.072397021303566],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_ea60b3bb5fc0ecd05082e80e2114aae3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_237b3dab93957b943bca4cbef4ede69e = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_d3acbf2acb5c2b6a3e6bf540f3ee6952 = $(`<div id="html_d3acbf2acb5c2b6a3e6bf540f3ee6952" style="width: 100.0%; height: 100.0%;">Ponto 6: Violência doméstica</div>`)[0];
+                popup_237b3dab93957b943bca4cbef4ede69e.setContent(html_d3acbf2acb5c2b6a3e6bf540f3ee6952);
+            
+        
+
+        marker_dae7ba147465e14d763d909cc2817ded.bindPopup(popup_237b3dab93957b943bca4cbef4ede69e)
+        ;
+
+        
+    
+    
+                marker_dae7ba147465e14d763d909cc2817ded.setIcon(icon_ea60b3bb5fc0ecd05082e80e2114aae3);
+            
+    
+            var marker_00c0537ed3cee61f1f849817b813d09a = L.marker(
+                [-15.842147849595792, -48.09707007770737],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_cced01bd3b8c1fe587ef7c9cc2bc1ceb = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_57d25f36e8f4dd9a46dfe9b85caef3ca = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_92192354ee7e8c5b2c7a6cd135cd49b2 = $(`<div id="html_92192354ee7e8c5b2c7a6cd135cd49b2" style="width: 100.0%; height: 100.0%;">Ponto 7: Violência doméstica</div>`)[0];
+                popup_57d25f36e8f4dd9a46dfe9b85caef3ca.setContent(html_92192354ee7e8c5b2c7a6cd135cd49b2);
+            
+        
+
+        marker_00c0537ed3cee61f1f849817b813d09a.bindPopup(popup_57d25f36e8f4dd9a46dfe9b85caef3ca)
+        ;
+
+        
+    
+    
+                marker_00c0537ed3cee61f1f849817b813d09a.setIcon(icon_cced01bd3b8c1fe587ef7c9cc2bc1ceb);
+            
+    
+            var marker_153b868c054ff81a2f6072f27f3e62ef = L.marker(
+                [-15.839679639258645, -48.094947307119206],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_9122133ab6cb5eb0798a4bad1ebcec52 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_3a4b03764ffec917f1385c5ce58c459b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_958c1d1fbec906aac8bb8a2d5ac38a56 = $(`<div id="html_958c1d1fbec906aac8bb8a2d5ac38a56" style="width: 100.0%; height: 100.0%;">Ponto 8: Medicamento hormonal</div>`)[0];
+                popup_3a4b03764ffec917f1385c5ce58c459b.setContent(html_958c1d1fbec906aac8bb8a2d5ac38a56);
+            
+        
+
+        marker_153b868c054ff81a2f6072f27f3e62ef.bindPopup(popup_3a4b03764ffec917f1385c5ce58c459b)
+        ;
+
+        
+    
+    
+                marker_153b868c054ff81a2f6072f27f3e62ef.setIcon(icon_9122133ab6cb5eb0798a4bad1ebcec52);
+            
+    
+            var marker_b08c97d7c91b854a34b513695e53f5f9 = L.marker(
+                [-15.83380110692317, -48.123279539035025],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_838614d28a70362cfe20f93cba4c73a2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a86777027ba3939776dd7c8d7770c609 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_957b9c5532e6d6fb00578cd1e19edbe3 = $(`<div id="html_957b9c5532e6d6fb00578cd1e19edbe3" style="width: 100.0%; height: 100.0%;">Ponto 9: Violência doméstica</div>`)[0];
+                popup_a86777027ba3939776dd7c8d7770c609.setContent(html_957b9c5532e6d6fb00578cd1e19edbe3);
+            
+        
+
+        marker_b08c97d7c91b854a34b513695e53f5f9.bindPopup(popup_a86777027ba3939776dd7c8d7770c609)
+        ;
+
+        
+    
+    
+                marker_b08c97d7c91b854a34b513695e53f5f9.setIcon(icon_838614d28a70362cfe20f93cba4c73a2);
+            
+    
+            var marker_65cf75a598399cb85cd75a171f5f9ae8 = L.marker(
+                [-15.797081789759757, -48.132416371752456],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_5148ed2d5fbe2e29850b1a59f49ce543 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_feca1fa9febabf009951b24c8e74bdc5 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_839d45b9c7a26766cea8845178af592f = $(`<div id="html_839d45b9c7a26766cea8845178af592f" style="width: 100.0%; height: 100.0%;">Ponto 10: Emergência obstétrica</div>`)[0];
+                popup_feca1fa9febabf009951b24c8e74bdc5.setContent(html_839d45b9c7a26766cea8845178af592f);
+            
+        
+
+        marker_65cf75a598399cb85cd75a171f5f9ae8.bindPopup(popup_feca1fa9febabf009951b24c8e74bdc5)
+        ;
+
+        
+    
+    
+                marker_65cf75a598399cb85cd75a171f5f9ae8.setIcon(icon_5148ed2d5fbe2e29850b1a59f49ce543);
+            
+    
+            var marker_84ae17ba653cb6060df2055a80868f3c = L.marker(
+                [-15.852632680161426, -48.07872743266048],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_823ba1ee869bad5a2c3ea5bdd1638674 = L.AwesomeMarkers.icon(
                 {
   "markerColor": "green",
   "iconColor": "white",
@@ -648,42 +496,36 @@
             );
         
     
-        var popup_d473d4e81c243bf2cf16689cf7777210 = L.popup({
+        var popup_8b37f2bd6a4a2cae7cc4f918551d649c = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_5e20a9b7e0d8630299f350b9214e4f21 = $(`<div id="html_5e20a9b7e0d8630299f350b9214e4f21" style="width: 100.0%; height: 100.0%;">Ponto 15: Pós-parto (Prioridade 1)</div>`)[0];
-                popup_d473d4e81c243bf2cf16689cf7777210.setContent(html_5e20a9b7e0d8630299f350b9214e4f21);
+                var html_9bb3940114c876b7b321522972acab9e = $(`<div id="html_9bb3940114c876b7b321522972acab9e" style="width: 100.0%; height: 100.0%;">Ponto 11: Atendimento pós-parto</div>`)[0];
+                popup_8b37f2bd6a4a2cae7cc4f918551d649c.setContent(html_9bb3940114c876b7b321522972acab9e);
             
         
 
-        marker_e19f431897ab64d9a0205db1c11efe91.bindPopup(popup_d473d4e81c243bf2cf16689cf7777210)
+        marker_84ae17ba653cb6060df2055a80868f3c.bindPopup(popup_8b37f2bd6a4a2cae7cc4f918551d649c)
         ;
 
         
     
     
-                marker_e19f431897ab64d9a0205db1c11efe91.setIcon(icon_9ddecd1fa77a725d1b8d09efa2f9f069);
+                marker_84ae17ba653cb6060df2055a80868f3c.setIcon(icon_823ba1ee869bad5a2c3ea5bdd1638674);
             
     
-            var poly_line_83879a604875d2653dbb2b06ee7776b7 = L.polyline(
-                [[-15.8356175, -48.0560153], [-15.8316967, -48.052472], [-15.8064899, -48.0760231], [-15.8739572, -48.0727333], [-15.8426281, -48.1047045], [-15.8360516, -48.0517181], [-15.8373558, -48.0545297], [-15.8456813, -48.1119766], [-15.8303533, -48.1416298], [-15.8349656, -48.0514407], [-15.8367063, -48.054113], [-15.8304553, -48.1426266], [-15.8474725, -48.1151962], [-15.8821505, -48.0897198], [-15.8346988, -48.0568651]],
-                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "black", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
-        
-    
-            var marker_d5c5035c368948916e03eb00dd0a151b = L.marker(
-                [-15.8119, -48.0972],
+            var marker_145b6913cfb15c981ab12e22e2a84133 = L.marker(
+                [-15.80498210922031, -48.10234650865324],
                 {
 }
-            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
         
     
-            var icon_1817c791cd775ac582c358c1755f4610 = L.AwesomeMarkers.icon(
+            var icon_f04030e8cbe3e74452c85aaf3b16bdc6 = L.AwesomeMarkers.icon(
                 {
-  "markerColor": "purple",
+  "markerColor": "blue",
   "iconColor": "white",
   "icon": "info-sign",
   "prefix": "glyphicon",
@@ -692,24 +534,144 @@
             );
         
     
-        var popup_0c5db36625c8f9153d0b4b7a34555d11 = L.popup({
+        var popup_dd11ed7399d44d49b98f8d6eb4d9c572 = L.popup({
   "maxWidth": "100%",
 });
 
         
             
-                var html_4ac238d2ef495e5923bb4fdd2048ad68 = $(`<div id="html_4ac238d2ef495e5923bb4fdd2048ad68" style="width: 100.0%; height: 100.0%;">Geração: 0, Fitness: inf</div>`)[0];
-                popup_0c5db36625c8f9153d0b4b7a34555d11.setContent(html_4ac238d2ef495e5923bb4fdd2048ad68);
+                var html_8725a6fc4eb6fe0e354fc6b8742d7c47 = $(`<div id="html_8725a6fc4eb6fe0e354fc6b8742d7c47" style="width: 100.0%; height: 100.0%;">Ponto 12: Medicamento hormonal</div>`)[0];
+                popup_dd11ed7399d44d49b98f8d6eb4d9c572.setContent(html_8725a6fc4eb6fe0e354fc6b8742d7c47);
             
         
 
-        marker_d5c5035c368948916e03eb00dd0a151b.bindPopup(popup_0c5db36625c8f9153d0b4b7a34555d11)
+        marker_145b6913cfb15c981ab12e22e2a84133.bindPopup(popup_dd11ed7399d44d49b98f8d6eb4d9c572)
         ;
 
         
     
     
-                marker_d5c5035c368948916e03eb00dd0a151b.setIcon(icon_1817c791cd775ac582c358c1755f4610);
+                marker_145b6913cfb15c981ab12e22e2a84133.setIcon(icon_f04030e8cbe3e74452c85aaf3b16bdc6);
             
+    
+            var marker_7b8e3bdd530368a0d69f12704a2d58a0 = L.marker(
+                [-15.793374883714641, -48.08604215585938],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_88767b2a6d40ff5d78e3e916085f0ea7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fefde3d2382fce9a8b0db222dabd805c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_f625c3d102b69ad991c49adbc174a563 = $(`<div id="html_f625c3d102b69ad991c49adbc174a563" style="width: 100.0%; height: 100.0%;">Ponto 13: Atendimento pós-parto</div>`)[0];
+                popup_fefde3d2382fce9a8b0db222dabd805c.setContent(html_f625c3d102b69ad991c49adbc174a563);
+            
+        
+
+        marker_7b8e3bdd530368a0d69f12704a2d58a0.bindPopup(popup_fefde3d2382fce9a8b0db222dabd805c)
+        ;
+
+        
+    
+    
+                marker_7b8e3bdd530368a0d69f12704a2d58a0.setIcon(icon_88767b2a6d40ff5d78e3e916085f0ea7);
+            
+    
+            var marker_5662f9ef99320b103c558f49fac476fb = L.marker(
+                [-15.799429482254927, -48.108549468741],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_52be37d90a971f9b6c89d03160897c39 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_25f9db1da8407125637c8507d3d0753b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_69b97c884c4472ca6964c7cdaa63c659 = $(`<div id="html_69b97c884c4472ca6964c7cdaa63c659" style="width: 100.0%; height: 100.0%;">Ponto 14: Medicamento hormonal</div>`)[0];
+                popup_25f9db1da8407125637c8507d3d0753b.setContent(html_69b97c884c4472ca6964c7cdaa63c659);
+            
+        
+
+        marker_5662f9ef99320b103c558f49fac476fb.bindPopup(popup_25f9db1da8407125637c8507d3d0753b)
+        ;
+
+        
+    
+    
+                marker_5662f9ef99320b103c558f49fac476fb.setIcon(icon_52be37d90a971f9b6c89d03160897c39);
+            
+    
+            var marker_575186c53b0ff94a0039b4963c0e0ff6 = L.marker(
+                [-15.83688644338945, -48.12077657247183],
+                {
+}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
+    
+            var icon_2aef7892b02b5f706b29451316457be7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_aa3763535f912626515f81ce43fe0210 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_b044690f8c54a9ca600a34d111bb0bf4 = $(`<div id="html_b044690f8c54a9ca600a34d111bb0bf4" style="width: 100.0%; height: 100.0%;">Ponto 15: Violência doméstica</div>`)[0];
+                popup_aa3763535f912626515f81ce43fe0210.setContent(html_b044690f8c54a9ca600a34d111bb0bf4);
+            
+        
+
+        marker_575186c53b0ff94a0039b4963c0e0ff6.bindPopup(popup_aa3763535f912626515f81ce43fe0210)
+        ;
+
+        
+    
+    
+                marker_575186c53b0ff94a0039b4963c0e0ff6.setIcon(icon_2aef7892b02b5f706b29451316457be7);
+            
+    
+            var poly_line_bcdb0d1dc0236b068da55540acb1f8c5 = L.polyline(
+                [[-15.849819443630166, -48.13976912552022], [-15.83380110692317, -48.123279539035025], [-15.83688644338945, -48.12077657247183], [-15.847665900360832, -48.112886572760765], [-15.847791537556157, -48.09279185707955], [-15.836345583918382, -48.072397021303566], [-15.839679639258645, -48.094947307119206], [-15.842147849595792, -48.09707007770737], [-15.833250597637146, -48.11372504351041], [-15.797081789759757, -48.132416371752456], [-15.799429482254927, -48.108549468741], [-15.80498210922031, -48.10234650865324], [-15.793374883714641, -48.08604215585938], [-15.852632680161426, -48.07872743266048], [-15.848437831387681, -48.132580248753136]],
+                {"bubblingMouseEvents": true, "color": "blue", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "blue", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.7, "smoothFactor": 1.0, "stroke": true, "weight": 4}
+            ).addTo(map_31893b34c673571c577d2e220516ce84);
+        
 </script>
 </html>
