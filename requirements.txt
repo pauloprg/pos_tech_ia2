@@ -1,1 +1,7 @@
-pygame==2.6.1
+pygame
+matplotlib
+folium
+streamlit
+streamlit-folium
+haversine
+html2image

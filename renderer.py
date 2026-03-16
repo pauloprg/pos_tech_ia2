@@ -1,216 +1,123 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 12 10:54:21 2026
-
-@author: paulo.goncalves
-"""
 import pygame
-from pontos import ServicePoint
-from draw_functions1 import draw_plot_panel
 
-WHITE = (255, 255, 255)
-BLACK = (20, 20, 20)
-GRAY = (220, 220, 220)
-DARK_GRAY = (120, 120, 120)
-RED = (220, 50, 50)
-ORANGE = (255, 140, 0)
-BLUE = (50, 90, 220)
-GREEN = (40, 170, 90)
-PURPLE = (140, 70, 180)
+# Cores
+WHITE, BLACK, BLUE_NEON = (255, 255, 255), (20, 20, 20), (0, 191, 255)
+GOLD, GRAY_DARK, GRAY_LIGHT = (255, 215, 0), (40, 40, 45), (150, 150, 150)
+PRIORITY_COLORS = {4: (255, 50, 50), 3: (255, 165, 0), 2: (0, 200, 255), 1: (50, 255, 50)}
 
+class BriefingPopup:
+    def __init__(self, texto_inicial):
+        self.historico_formatado = [] 
+        self.input_usuario = ""
+        self.largura, self.altura = 800, 550
+        self.visivel = True
+        self.carregando = False
+        self.font_m = pygame.font.SysFont("arial", 16)
+        self.font_t = pygame.font.SysFont("arial", 20, bold=True)
+        self.adicionar_mensagem("IA", texto_inicial)
 
-def get_priority_color(priority: int) -> tuple[int, int, int]:
-    if priority == 4:
-        return RED
-    if priority == 3:
-        return ORANGE
-    if priority == 2:
-        return BLUE
-    return GREEN
-
-
-def draw_route_lines(screen: pygame.Surface, points: list[ServicePoint]) -> None:
-    if len(points) < 2:
-        return
-
-    for i in range(len(points) - 1):
-        start = points[i].posicao()
-        end = points[i + 1].posicao()
-        pygame.draw.line(screen, PURPLE, start, end, 2)
-
-
-def draw_service_points(screen: pygame.Surface, points: list[ServicePoint], font: pygame.font.Font) -> None:
-    for point in points:
-        color = get_priority_color(point.prioridade)
-        pygame.draw.circle(screen, color, point.posicao(), 7)
-        label = font.render(str(point.id), True, BLACK)
-        screen.blit(label, (point.x + 8, point.y - 8))
-
-
-def draw_colored_bullet(
-    screen: pygame.Surface,
-    x: int,
-    y: int,
-    color: tuple[int, int, int],
-    radius: int = 5
-) -> None:
-    pygame.draw.circle(screen, color, (x, y), radius)
-    
-def draw_scrollbar(
-    screen: pygame.Surface,
-    x: int,
-    y: int,
-    width: int,
-    height: int,
-    content_height: int,
-    scroll_offset: int
-) -> None:
-    if content_height <= height:
-        return
-    
-    pygame.draw.rect(screen, (210, 210, 210), (x, y, width, height))
-
-    thumb_height = max(30, int(height * (height / content_height)))
-    max_scroll = content_height - height
-    thumb_y = y + int((scroll_offset / max_scroll) * (height - thumb_height))
-
-    pygame.draw.rect(screen, DARK_GRAY, (x, thumb_y, width, thumb_height))
-    
-    
-def draw_side_panel(
-    screen: pygame.Surface,
-    panel_x: int,
-    panel_width: int,
-    window_height: int,
-    title_font: pygame.font.Font,
-    text_font: pygame.font.Font,
-    route: list[ServicePoint],
-    generation: int,
-    best_fitness: float,
-    fitness_history: list[float],
-    scroll_offset: int
-) -> int:
-    pygame.draw.rect(screen, GRAY, (panel_x, 0, panel_width, window_height))
-    
-    chart_height = 190
-
-    draw_plot_panel(
-        screen=screen,
-        fitness_history=fitness_history,
-        x=panel_x + 10,
-        y=10,
-        width=panel_width - 20,
-        height=chart_height,
-        x_label="Generation",
-        y_label="Fitness"
-    )
-    
-    content_x = panel_x + 16
-    content_y = chart_height + 18
-
-    title = title_font.render("Rota em tempo real", True, BLACK)
-    screen.blit(title, (content_x, content_y))
-
-    info_lines = [
-        f"Geração: {generation}",
-        f"Melhor fitness: {best_fitness:.2f}",
-        ""
-    ]
-    
-    y = content_y + 34
-    for line in info_lines:
-        text_surface = text_font.render(line, True, BLACK)
-        screen.blit(text_surface, (content_x, y))
-        y += 18
-
-    # LEGENDA COM CORES
-    LEGENDAS = [
-        (4, "4 = Emergência obstétrica"),
-        (3, "3 = Violência doméstica"),
-        (2, "2 = Medicamento hormonal"),
-        (1, "1 = Pós-parto"),
-    ]
-
-    legend_title = text_font.render("Prioridades:", True, BLACK)
-    screen.blit(legend_title, (content_x, y))
-    y += 22
-
-    for priority, text_line in LEGENDAS:
-        color = get_priority_color(priority)
-        draw_colored_bullet(screen, content_x + 6, y + 6, color, radius=5)
-
-        text_surface = text_font.render(text_line, True, BLACK)
-        screen.blit(text_surface, (content_x + 20, y))
-        y += 18
-
-    y += 10
-    
-    route_title = text_font.render("Melhor rota atual:", True, BLACK)
-    screen.blit(route_title, (content_x, y))
-    y += 22
-    
-    route_start_y = y
-
-    TIPOS_ATENDIMENTOS = {
-        "Emergência obstétrica": "Emerg. obstétrica",
-        "Violência doméstica": "Viol. doméstica",
-        "Medicamento hormonal": "Med. hormonal",
-        "Pós-parto": "Pós-parto",
-    }
-
-    line_height = 17
-    column_width = (panel_width - 50) // 2
-    col1_x = 0
-    col2_x = column_width
-    
-    visible_area_height = window_height - route_start_y - 20
-    items_per_column = visible_area_height // line_height
-    if items_per_column < 1:
-        items_per_column = 1
+    def adicionar_mensagem(self, autor, texto):
+        self.carregando = False
+        prefixo = "🤖 Assistente: " if autor == "IA" else "👤 Maitê: "
+        cor = (200, 230, 255) if autor == "IA" else WHITE
         
-    total_items = len(route)
-    total_rows = (total_items + 1) // 2 if total_items > items_per_column else total_items
-    content_height = max(visible_area_height, total_rows * line_height)
+        # Quebra automática de linha para o texto caber no popup
+        palavras = (prefixo + texto).replace('\n', ' \n ').split(' ')
+        linha_atual = ""
+        for p in palavras:
+            if p == '\n':
+                self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+                linha_atual = ""
+                continue
+            test_line = linha_atual + p + " "
+            if self.font_m.size(test_line)[0] < (self.largura - 60):
+                linha_atual = test_line
+            else:
+                self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+                linha_atual = p + " "
+        self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+        self.historico_formatado.append({"texto": "", "cor": BLACK}) # Espaçador
+
+    def draw(self, screen):
+        if not self.visivel: return
+        overlay = pygame.Surface((1400, 800), pygame.SRCALPHA)
+        pygame.draw.rect(overlay, (0, 0, 0, 220), (0, 0, 1400, 800))
+        
+        x, y = (1000 - self.largura) // 2, (800 - self.altura) // 2
+        rect = pygame.Rect(x, y, self.largura, self.altura)
+        pygame.draw.rect(overlay, (25, 25, 30), rect, border_radius=15)
+        pygame.draw.rect(overlay, BLUE_NEON, rect, 2, border_radius=15)
+
+        overlay.blit(self.font_t.render("✨ Briefing Inteligente & Chat", True, GOLD), (x+30, y+20))
+
+        # Renderiza mensagens (últimas 15 linhas)
+        y_text = y + 70
+        for item in self.historico_formatado[-15:]:
+            if item["texto"]:
+                surf = self.font_m.render(item["texto"], True, item["cor"])
+                overlay.blit(surf, (x+30, y_text))
+            y_text += 22
+
+        # Input
+        input_y = y + self.altura - 60
+        pygame.draw.rect(overlay, GRAY_DARK, (x+20, input_y, self.largura-40, 40), border_radius=8)
+        txt_input = self.font_m.render(f"Pergunta: {self.input_usuario}_", True, (0, 255, 150))
+        overlay.blit(txt_input, (x+35, input_y + 10))
+        
+        hint = "ESC para fechar | ENTER para enviar"
+        lbl_hint = pygame.font.SysFont("arial", 12).render(hint, True, GRAY_LIGHT)
+        overlay.blit(lbl_hint, (x+30, y + self.altura - 85))
+
+        if self.carregando:
+            lbl_load = self.font_m.render("Aguardando Llama...", True, GOLD)
+            overlay.blit(lbl_load, (x + self.largura - 160, y + 25))
+
+        screen.blit(overlay, (0, 0))
+
+def draw_chat_button(screen, x, y, w, h, is_optimal):
+    cor = BLUE_NEON if is_optimal else (70, 70, 70)
+    rect = pygame.Rect(x, y, w, h)
+    if is_optimal:
+        for i in range(3):
+            pygame.draw.rect(screen, (0, 100, 255), rect.inflate(i*2, i*2), 1, border_radius=10)
+    pygame.draw.rect(screen, cor, rect, border_radius=8)
+    font = pygame.font.SysFont("arial", 16, bold=True)
+    txt = "ABRIR CHAT IA" if is_optimal else "OTIMIZANDO..."
+    surf = font.render(txt, True, WHITE)
+    screen.blit(surf, (x + (w - surf.get_width())//2, y + (h - surf.get_height())//2))
+    return rect
+
+def draw_route_lines(screen, route):
+    if len(route) < 2: return
+    for i in range(len(route) - 1):
+        pygame.draw.line(screen, BLUE_NEON, (route[i].x, route[i].y), (route[i+1].x, route[i+1].y), 4)
+
+def draw_service_points(screen, points, font):
+    for p in points:
+        pygame.draw.circle(screen, PRIORITY_COLORS.get(p.prioridade, WHITE), (p.x, p.y), 10)
+        pygame.draw.circle(screen, WHITE, (p.x, p.y), 10, 2)
+        lbl = font.render(f"P{p.id}", True, WHITE)
+        screen.blit(lbl, (p.x + 12, p.y - 12))
+
+def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, opt):
+    pygame.draw.rect(screen, (30, 30, 30), (px, 0, pw, vh))
+    pygame.draw.line(screen, BLUE_NEON, (px, 0), (px, vh), 2)
+    margin = px + 25
+    status_c = GOLD if opt else BLUE_NEON
+    screen.blit(f1.render("ROTA OTIMIZADA!" if opt else f"GERAÇÃO: {gen}", True, status_c), (margin, 25))
+    screen.blit(f2.render(f"Distância: {round(fit, 2)} km", True, WHITE), (margin, 55))
     
-    route_surface_width = panel_width - 40
-    route_surface_height = content_height
-    route_surface = pygame.Surface((route_surface_width, route_surface_height), pygame.SRCALPHA)
-    route_surface.fill((0, 0, 0, 0))
-    
-    # LISTA DA ROTA COM BOLINHA DA MESMA COR DO MAPA
-    for idx, point in enumerate(route, start=1):
-        tipo = TIPOS_ATENDIMENTOS.get(point.tipo_atendimento, point.tipo_atendimento)
-        color = get_priority_color(point.prioridade)
+    y_s = 100 - scroll
+    for i, p in enumerate(route):
+        if 100 < y_s < 520:
+            pygame.draw.rect(screen, PRIORITY_COLORS.get(p.prioridade), (margin, y_s+4, 6, 12))
+            screen.blit(f2.render(f"{i+1}º: {p.codigo[:28]}", True, WHITE), (margin+15, y_s))
+        y_s += 25
 
-        text  = (
-            f"{idx}. P{point.id} {point.codigo} | "
-            f"{tipo} | D:{point.quantidade} | T:{point.tempo_atendimento:.1f}h"
-        )
-        
-        if idx <= items_per_column:
-            draw_x = col1_x
-            draw_y = (idx - 1) * line_height
-        else:
-            draw_x = col2_x
-            draw_y = (idx - items_per_column - 1) * line_height
-        
-        draw_colored_bullet(route_surface, draw_x + 6, draw_y + 6, color, radius=5)
-        line_surface = text_font.render(text, True, BLACK)
-        route_surface.blit(line_surface, (draw_x + 18, draw_y))
-        
-    clip_rect = pygame.Rect(0, scroll_offset, route_surface_width, visible_area_height)
-    screen.blit(route_surface, (content_x, route_start_y), clip_rect)
-
-    scrollbar_x = panel_x + panel_width - 14
-    draw_scrollbar(
-        screen=screen,
-        x=scrollbar_x,
-        y=route_start_y,
-        width=8,
-        height=visible_area_height,
-        content_height=route_surface_height,
-        scroll_offset=scroll_offset
-    )
-
-    max_scroll = max(0, route_surface_height - visible_area_height)
-    return max_scroll
+    gx, gy, gw, gh = px + 50, 620, pw - 80, 140
+    pygame.draw.rect(screen, (20,20,20), (gx, gy, gw, gh))
+    if len(hist) > 2:
+        max_h, min_h = max(hist), min(hist)
+        pts = [(gx+(i*gw/len(hist)), (gy+gh)-((val-min_h)/(max_h-min_h+1)*gh)) for i,val in enumerate(hist)]
+        pygame.draw.lines(screen, status_c, False, pts, 2)

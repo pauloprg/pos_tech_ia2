@@ -36,10 +36,13 @@ O objetivo é demonstrar como **algoritmos de otimização podem apoiar sistemas
 
 | Tecnologia | Função |
 |--------|--------|
-| Python | Linguagem principal |
-| Pygame | Interface gráfica e visualização do mapa |
+| Python 3.11 | Linguagem principal |
+| Pygame | Interface gráfica desktop e visualização do mapa |
+| Folium | Mapas interativos web com Leaflet |
 | Algoritmos Genéticos | Otimização das rotas |
 | NumPy | Manipulação de dados numéricos |
+| Haversine | Cálculo de distâncias geográficas reais |
+| Streamlit | Aplicação web para visualização em tempo real (opcional) |
 
 ---
 
@@ -222,14 +225,52 @@ cd pos_tech_ia2
 ---
 
 ## 2. Instalar dependências
+Use Python 3.11 (recomendado para compatibilidade com Pygame).
+
 pip install -r requirements.txt
 
----
-
-## 3. Executar o sistema
-python main.py
+Ou manualmente: pip install pygame matplotlib folium streamlit streamlit-folium haversine
 
 ---
+
+## 3. Executar o sistema (Modo Real-Time: Pygame + Folium com imagem dinâmica)
+"C:\Users\Perfil\AppData\Local\Programs\Python\Python311\python.exe" main.py
+
+**OU** (se py launcher estiver configurado):
+py -3.11 main.py
+
+Isso executa a otimização em tempo real com:
+- Janela desktop Pygame mostrando mapa renderizado do Folium (imagem atualizada dinamicamente)
+- Rota otimizada em tempo real sobreposta na imagem do mapa
+- Painel lateral com detalhes da evolução
+- Mapa web Folium interativo que se atualiza automaticamente a cada 10 gerações
+- Algoritmo genético evoluindo continuamente até convergência
+
+**Nota**: O Pygame agora usa uma imagem PNG gerada dinamicamente do mapa Folium, não a imagem estática anterior.
+
+---
+
+## 4. Outros modos de execução
+
+### Mapa Folium Estático
+python folium_main.py
+
+### Visualização Pygame Desktop
+python pygame_main.py
+
+### Visualização em Tempo Real com Streamlit
+python -m streamlit run folium_streamlit.py
+
+---
+
+# Exemplo de Execução
+
+Ao executar `main.py`, será aberta:
+
+- **Janela Pygame**: Mapa de Ceilândia com pontos de atendimento, rota em evolução e painel lateral com detalhes
+- **Navegador**: Mapa Folium interativo que se atualiza automaticamente mostrando a rota otimizada
+
+O algoritmo genético roda continuamente, melhorando a rota em tempo real. Feche a janela Pygame para parar.
 
 # Exemplo de Execução
 

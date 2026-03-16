@@ -1,139 +1,117 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 12 10:57:29 2026
+import sys, pygame, os
+from mapa_utils import *
+from renderer import *
+from genetic_algorithm import *
+from ai_advisor import *
 
-@author: paulo.goncalves
-"""
-
-import sys
-import pygame
-import os
-
-from mapa_utils import (
-    load_and_scale_map,
-    build_valid_positions,
-    generate_service_points
-)
-from renderer import draw_route_lines, draw_service_points, draw_side_panel
-from genetic_algorithm import (
-    generate_random_population,
-    evolve_population
-)
-
-
-WINDOW_WIDTH = 1500
-WINDOW_HEIGHT = 800
-
-MAP_WIDTH = 980
-MAP_HEIGHT = 800
-PANEL_WIDTH = WINDOW_WIDTH - MAP_WIDTH
-
-FPS = 10
-N_POINTS = 50
-
-POPULATION_SIZE = 100
-MUTATION_PROBABILITY = 0.20
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MAP_PATH = os.path.join(BASE_DIR, "assets", "Mapa_DF.png")
-
+# CONSTANTES GLOBAIS - GARANTA QUE ESTEJAM AQUI
+WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 800
+MAP_WIDTH, PANEL_WIDTH = 1000, 400
+FPS = 30 
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
-    pygame.display.set_caption("Saúde da Mulher no DF")
+    screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.DOUBLEBUF)
+    pygame.display.set_caption("Saúde da Mulher - Ceilândia (Llama 3 Chat)")
     clock = pygame.time.Clock()
-
-    title_font = pygame.font.SysFont("arial", 20, bold=True)
-    text_font = pygame.font.SysFont("arial", 11)
-    small_font = pygame.font.SysFont("arial", 10)
-
-    map_surface = load_and_scale_map(MAP_PATH, MAP_WIDTH, MAP_HEIGHT)
-    valid_positions = build_valid_positions(map_surface)
-
-    service_points = generate_service_points(valid_positions=valid_positions,
-        n_points=N_POINTS)
     
-    population = generate_random_population(service_points, POPULATION_SIZE)
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    json_path = os.path.join(BASE_DIR, "assets", "dataset_ceilandia_osm.jsonl")
     
-    generation = 0
-    best_route = population[0][:]
+    coords_data = load_coordinates_from_jsonl(json_path)
+    service_points = generate_service_points(coords_data, 15, MAP_WIDTH, WINDOW_HEIGHT)
+    
+    population = generate_random_population(service_points, 100)
     best_fitness = float("inf")
     fitness_history = []
-    scroll_offset = 0
-    max_scroll = 0
-    
-    panel_rect = pygame.Rect(MAP_WIDTH, 0, PANEL_WIDTH, WINDOW_HEIGHT)
+    generation, stable_count, is_optimal = 0, 0, False
+    popup = None
+    best_route = []
+
+    # Mapa de Fundo
+    try:
+        map_surface = load_and_scale_map(os.path.join(BASE_DIR, "mapa_vibrante.png"), MAP_WIDTH, WINDOW_HEIGHT)
+    except:
+        map_surface = None
 
     running = True
     while running:
+        mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: 
                 running = False
-            elif event.type == pygame.MOUSEWHEEL:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                if panel_rect.collidepoint(mouse_x, mouse_y):
-                    scroll_offset -= event.y * 25
-                    if scroll_offset < 0:
-                        scroll_offset = 0
-                    if scroll_offset > max_scroll:
-                        scroll_offset = max_scroll
-                
-        generation += 1
-        
-        population, current_best_route, current_best_fitness = evolve_population(
-            population=population,
-            population_size=POPULATION_SIZE,
-            mutation_probability=MUTATION_PROBABILITY,
-            elite_size=1
-        )
-        
-        if current_best_fitness < best_fitness:
-            best_fitness = current_best_fitness
-            best_route = current_best_route[:]
-        
-        fitness_history.append(best_fitness)
-        if len(fitness_history) > 300:
-            fitness_history = fitness_history[-300:]
             
-        print(f"Generation {generation}: Best fitness = {round(best_fitness, 2)}")
-        
-        screen.fill((255, 255, 255))
-        screen.blit(map_surface, (0, 0))
+            # --- EVENTOS DO POPUP (CHAT) ---
+            if popup and popup.visivel:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE: 
+                        popup.visivel = False
+                    elif event.key == pygame.K_RETURN:
+                        if popup.input_usuario.strip():
+                            msg = popup.input_usuario
+                            popup.input_usuario = ""
+                            popup.carregando = True
+                            # Força o desenho do estado "carregando"
+                            popup.draw(screen)
+                            pygame.display.flip()
+                            
+                            res = enviar_mensagem_chat(msg)
+                            popup.adicionar_mensagem("Maitê", msg)
+                            popup.adicionar_mensagem("IA", res)
+                    elif event.key == pygame.K_BACKSPACE: 
+                        popup.input_usuario = popup.input_usuario[:-1]
+                    else: 
+                        popup.input_usuario += event.unicode
+                continue 
 
+            # Clique no Botão
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                btn_rect = pygame.Rect(MAP_WIDTH + 50, 530, 300, 45)
+                if btn_rect.collidepoint(mouse_pos) and is_optimal:
+                    if not popup:
+                        briefing = gerar_briefing_vibrante(best_route)
+                        inicializar_chat(best_route)
+                        popup = BriefingPopup(briefing)
+                    else: 
+                        popup.visivel = True
+
+        # Evolução
+        if not is_optimal:
+            generation += 1
+            population, cur_best, cur_fit = evolve_population(population, 100, 0.25)
+            if cur_fit < best_fitness:
+                best_fitness, best_route, stable_count = cur_fit, cur_best[:], 0
+            else: 
+                stable_count += 1
+            
+            if stable_count > 500: 
+                is_optimal = True
+            
+            fitness_history.append(best_fitness)
+            if len(fitness_history) > 150: fitness_history.pop(0)
+
+        # Renderização
+        screen.fill((20,20,20))
+        if map_surface: screen.blit(map_surface, (0, 0))
+        
         draw_route_lines(screen, best_route)
-        draw_service_points(screen, service_points, small_font)
+        draw_service_points(screen, service_points, pygame.font.SysFont("arial", 11))
         
-        max_scroll = draw_side_panel(
-            screen=screen,
-            panel_x=MAP_WIDTH,
-            panel_width=PANEL_WIDTH,
-            window_height=WINDOW_HEIGHT,
-            title_font=title_font,
-            text_font=text_font,
-            route=best_route,
-            generation=generation,
-            best_fitness=best_fitness,
-            fitness_history=fitness_history,
-            scroll_offset=scroll_offset
-        )
+        draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT, 
+                        pygame.font.SysFont("arial", 18, True), pygame.font.SysFont("arial", 13),
+                        best_route, generation, best_fitness, fitness_history, 0, is_optimal)
         
-        if scroll_offset > max_scroll:
-            scroll_offset = max_scroll
-
-        footer = text_font.render(
-            "Tech Challenge fase 2: otimização de rotas com algoritmo genético",
-            True,
-            (20, 20, 20)
-        )
-        screen.blit(footer, (20, WINDOW_HEIGHT - 22))
-
+        draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
+        
+        if popup and popup.visivel: 
+            popup.draw(screen)
+        
         pygame.display.flip()
-        clock.tick(FPS)
+        clock.tick(FPS) # <--- O erro estava aqui
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()
