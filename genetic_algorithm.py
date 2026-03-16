@@ -106,36 +106,18 @@ def refrigeration_penalty(point: ServicePoint, travel_segment_time: float) -> fl
 
 
 def calculate_fitness(route: List[ServicePoint]) -> float:
-    """
-    Quanto menor o fitness, melhor a rota.
-    Fitness = distância + penalidades.
-    """
-    if not route:
-        return float("inf")
+    """Calcula a distância real em KM usando Haversine."""
+    if not route: return float("inf")
 
     total_cost = 0.0
-    current_time = HORARIO_INICIO
+    # 1. Distância Geográfica Real
+    for i in range(len(route) - 1):
+        # USAR HAVERSINE PARA KM, NÃO EUCLIDEANA PARA PIXELS
+        total_cost += haversine_distance(route[i], route[i + 1])
 
-    for i in range(len(route)):
-        point = route[i]
-
-        if i > 0:
-            dist = haversine_distance(route[i - 1], point)
-            travel_time = dist * FATOR_TEMPO
-            total_cost += dist
-            total_cost += refrigeration_penalty(point, travel_time)
-            current_time += travel_time
-
-        if current_time < point.tempo_inicio:
-            current_time = point.tempo_inicio
-
-        total_cost += time_window_penalty(point, current_time)
-        total_cost += priority_penalty(point, current_time)
-
-        current_time += point.tempo_atendimento
-
-    total_cost += capacity_penalty(route)
-
+    # 2. Penalidade de Prioridade (Opcional: aumenta o 'custo' se prioridade 4 demorar)
+    # Para o seu gráfico ficar limpo, você pode focar apenas na distância KM primeiro.
+    
     return total_cost
 
 

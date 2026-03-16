@@ -43,9 +43,15 @@ def load_coordinates_from_jsonl(file_path):
                     continue
     return coordinates
 
-def generate_service_points(coordinates=None, n_points=15, map_width=980, map_height=800):
-    """Gera exatamente 15 pontos de atendimento."""
+def generate_service_points(coordinates=None, n_points=15, map_width=1000, map_height=800):
+    """Gera 15 pontos concentrados no centro da Ceilândia."""
     service_points = []
+    
+    # Centro aproximado da Ceilândia
+    LAT_CENTER, LON_CENTER = -15.8219, -48.1072
+    # Margem menor para concentrar os pontos (aproximadamente 3-4km de raio)
+    OFFSET = 0.015 
+
     tipos = [
         ("Emergência obstétrica", 4, True, True),
         ("Violência doméstica", 3, False, True),
@@ -54,13 +60,26 @@ def generate_service_points(coordinates=None, n_points=15, map_width=980, map_he
     ]
 
     for i in range(n_points):
+        # Se houver coordenadas reais, tenta pegar as que estão mais próximas do centro
         if coordinates and len(coordinates) > 0:
-            lat, lon = random.choice(coordinates)
+            # Filtra coordenadas que estão dentro da margem central
+            central_coords = [c for c in coordinates if abs(c[0] - LAT_CENTER) < OFFSET and abs(c[1] - LON_CENTER) < OFFSET]
+            if central_coords:
+                lat, lon = random.choice(central_coords)
+            else:
+                lat, lon = random.choice(coordinates)
         else:
-            lat = random.uniform(LAT_MIN, LAT_MAX)
-            lon = random.uniform(LON_MIN, LON_MAX)
+            # Sorteio puramente aleatório restrito ao centro
+            lat = random.uniform(LAT_CENTER - OFFSET, LAT_CENTER + OFFSET)
+            lon = random.uniform(LON_CENTER - OFFSET, LON_CENTER + OFFSET)
 
+        # Conversão para pixels usando os limites globais para manter a proporção no mapa
         x, y = latlon_to_pixel(lat, lon, map_width, map_height)
+        
+        # Garante que os pontos fiquem visíveis dentro da área do mapa no Pygame
+        x = max(50, min(x, map_width - 50))
+        y = max(50, min(y, map_height - 50))
+
         tipo_nome, prioridade, temp_ctrl, prot_esp = random.choice(tipos)
 
         point = ServicePoint(
