@@ -6,8 +6,24 @@ Created on Thu Mar 12 10:50:42 2026
 """
 
 import random
-import pygame
+import json
+import os
 from pontos import ServicePoint
+import pygame
+
+# Limites geográficos aproximados de Ceilândia
+LAT_MIN = -15.86
+LAT_MAX = -15.79
+LON_MIN = -48.15
+LON_MAX = -48.06
+
+MAP_WIDTH = 980
+MAP_HEIGHT = 800
+
+def lat_lon_to_pixel(lat: float, lon: float) -> tuple[int, int]:
+    x = int((lon - LON_MIN) / (LON_MAX - LON_MIN) * MAP_WIDTH)
+    y = int((LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * MAP_HEIGHT)
+    return x, y
 
 TIPOS_ATENDIMENTO = [
     {
@@ -53,6 +69,20 @@ TIPOS_ATENDIMENTO = [
 ]
 
 
+def load_coordinates_from_jsonl(jsonl_path: str) -> list[tuple[float, float]]:
+    coords = set()
+    with open(jsonl_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            data = json.loads(line)
+            if 'input' in data and ',' in data['input']:
+                try:
+                    lat, lon = map(float, data['input'].split(','))
+                    coords.add((lat, lon))
+                except:
+                    pass
+    return list(coords)
+
+
 def load_and_scale_map(image_path: str, map_width: int, map_height: int) -> pygame.Surface:
     image = pygame.image.load(image_path)
     image = pygame.transform.smoothscale(image, (map_width, map_height))
@@ -89,7 +119,8 @@ def synthetic_patient_code(index: int) -> str:
     return f"PAC-{index:03d}"
 
 
-def generate_synthetic_service_point(point_id: int, x: int, y: int) -> ServicePoint:
+def generate_synthetic_service_point(point_id: int, lat: float, lon: float) -> ServicePoint:
+    x, y = lat_lon_to_pixel(lat, lon)
     profile = random.choices(
         TIPOS_ATENDIMENTO,
         weights=[item["peso"] for item in TIPOS_ATENDIMENTO],
@@ -102,6 +133,8 @@ def generate_synthetic_service_point(point_id: int, x: int, y: int) -> ServicePo
 
     return ServicePoint(
         id=point_id,
+        lat=lat,
+        lon=lon,
         x=x,
         y=y,
         codigo=synthetic_patient_code(point_id),
@@ -117,14 +150,14 @@ def generate_synthetic_service_point(point_id: int, x: int, y: int) -> ServicePo
 
 
 def generate_service_points(
-    valid_positions: list[tuple[int, int]],
+    coordinates: list[tuple[float, float]],
     n_points: int
 ) -> list[ServicePoint]:
-    selected_positions = random.sample(valid_positions, n_points)
+    selected_coords = random.sample(coordinates, n_points)
     points = []
 
-    for i, (x, y) in enumerate(selected_positions, start=1):
-        point = generate_synthetic_service_point(i, x, y)
+    for i, (lat, lon) in enumerate(selected_coords, start=1):
+        point = generate_synthetic_service_point(i, lat, lon)
         points.append(point)
 
     return points

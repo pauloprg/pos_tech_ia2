@@ -11,6 +11,8 @@ from dataclasses import dataclass
 @dataclass
 class ServicePoint:
     id: int
+    lat: float
+    lon: float
     x: int
     y: int
     codigo: str

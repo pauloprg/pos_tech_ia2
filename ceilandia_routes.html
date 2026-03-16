@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html>
+<head><meta http-equiv="refresh" content="5">
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_112bf50d9ef74a7d29c109bd74c71c24 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_112bf50d9ef74a7d29c109bd74c71c24" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_112bf50d9ef74a7d29c109bd74c71c24 = L.map(
+                "map_112bf50d9ef74a7d29c109bd74c71c24",
+                {
+                    center: [-15.8219, -48.1072],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 13,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_cbf3f4e79c6d3e1257276dc4f6120123 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_cbf3f4e79c6d3e1257276dc4f6120123.addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var marker_0d7a222fe9f9c82211641442c7b1d4d5 = L.marker(
+                [-15.8304553, -48.1426266],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_9094ee2c27b2e53054402f3c34d9c69e = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fa3178db24a242659d5b47459b1629aa = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_7b36e3ca6e4af2c570d83c4a83b60145 = $(`<div id="html_7b36e3ca6e4af2c570d83c4a83b60145" style="width: 100.0%; height: 100.0%;">Ponto 1: Violência doméstica (Prioridade 3)</div>`)[0];
+                popup_fa3178db24a242659d5b47459b1629aa.setContent(html_7b36e3ca6e4af2c570d83c4a83b60145);
+            
+        
+
+        marker_0d7a222fe9f9c82211641442c7b1d4d5.bindPopup(popup_fa3178db24a242659d5b47459b1629aa)
+        ;
+
+        
+    
+    
+                marker_0d7a222fe9f9c82211641442c7b1d4d5.setIcon(icon_9094ee2c27b2e53054402f3c34d9c69e);
+            
+    
+            var marker_a9f475e892690ad50ec0da2932438d33 = L.marker(
+                [-15.8367063, -48.054113],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_6f48269a87d9ea2ab5c9f63238ab2d42 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_cbe82844e2dbb61b86314fc30444936c = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_95314efd2352256ac5852eecdf4977a6 = $(`<div id="html_95314efd2352256ac5852eecdf4977a6" style="width: 100.0%; height: 100.0%;">Ponto 2: Emergência obstétrica (Prioridade 4)</div>`)[0];
+                popup_cbe82844e2dbb61b86314fc30444936c.setContent(html_95314efd2352256ac5852eecdf4977a6);
+            
+        
+
+        marker_a9f475e892690ad50ec0da2932438d33.bindPopup(popup_cbe82844e2dbb61b86314fc30444936c)
+        ;
+
+        
+    
+    
+                marker_a9f475e892690ad50ec0da2932438d33.setIcon(icon_6f48269a87d9ea2ab5c9f63238ab2d42);
+            
+    
+            var marker_8830c984e6d21635f72383c2068a0320 = L.marker(
+                [-15.8456813, -48.1119766],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_de848622c5a5a6567e88b1cf694736d7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_80c66d86b97d104d20fc72bce395d765 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a4017b5ed27449342699acf8dab166f3 = $(`<div id="html_a4017b5ed27449342699acf8dab166f3" style="width: 100.0%; height: 100.0%;">Ponto 3: Violência doméstica (Prioridade 3)</div>`)[0];
+                popup_80c66d86b97d104d20fc72bce395d765.setContent(html_a4017b5ed27449342699acf8dab166f3);
+            
+        
+
+        marker_8830c984e6d21635f72383c2068a0320.bindPopup(popup_80c66d86b97d104d20fc72bce395d765)
+        ;
+
+        
+    
+    
+                marker_8830c984e6d21635f72383c2068a0320.setIcon(icon_de848622c5a5a6567e88b1cf694736d7);
+            
+    
+            var marker_2e54bc09a6ae9aaffe84d48d19b605a5 = L.marker(
+                [-15.8349656, -48.0514407],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_c4d4edf573e0162b8648868c57098651 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_951131236d1b4dd8ea7c21a157cdff23 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_ed10aafe7dc2c56aa2345b8c0ae2412a = $(`<div id="html_ed10aafe7dc2c56aa2345b8c0ae2412a" style="width: 100.0%; height: 100.0%;">Ponto 4: Medicamento hormonal (Prioridade 2)</div>`)[0];
+                popup_951131236d1b4dd8ea7c21a157cdff23.setContent(html_ed10aafe7dc2c56aa2345b8c0ae2412a);
+            
+        
+
+        marker_2e54bc09a6ae9aaffe84d48d19b605a5.bindPopup(popup_951131236d1b4dd8ea7c21a157cdff23)
+        ;
+
+        
+    
+    
+                marker_2e54bc09a6ae9aaffe84d48d19b605a5.setIcon(icon_c4d4edf573e0162b8648868c57098651);
+            
+    
+            var marker_0266e191bffd76e7612fa35a8fe63261 = L.marker(
+                [-15.8346988, -48.0568651],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_62b7c70cdd64791536040926149ab1d1 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b33c9d04b60f1b49139b31f2623bd69b = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a24bf3bf1bf4e5a1832e7e27196ad02b = $(`<div id="html_a24bf3bf1bf4e5a1832e7e27196ad02b" style="width: 100.0%; height: 100.0%;">Ponto 5: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_b33c9d04b60f1b49139b31f2623bd69b.setContent(html_a24bf3bf1bf4e5a1832e7e27196ad02b);
+            
+        
+
+        marker_0266e191bffd76e7612fa35a8fe63261.bindPopup(popup_b33c9d04b60f1b49139b31f2623bd69b)
+        ;
+
+        
+    
+    
+                marker_0266e191bffd76e7612fa35a8fe63261.setIcon(icon_62b7c70cdd64791536040926149ab1d1);
+            
+    
+            var marker_122e8f4e719350d8aebf5fd5b7d4c251 = L.marker(
+                [-15.8739572, -48.0727333],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_b5e451fb5df82815cbbc84c7859e86fc = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_53154c1b6b55c2e92dc7f905a8aff094 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a31be42cae5eec959701768a61366948 = $(`<div id="html_a31be42cae5eec959701768a61366948" style="width: 100.0%; height: 100.0%;">Ponto 6: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_53154c1b6b55c2e92dc7f905a8aff094.setContent(html_a31be42cae5eec959701768a61366948);
+            
+        
+
+        marker_122e8f4e719350d8aebf5fd5b7d4c251.bindPopup(popup_53154c1b6b55c2e92dc7f905a8aff094)
+        ;
+
+        
+    
+    
+                marker_122e8f4e719350d8aebf5fd5b7d4c251.setIcon(icon_b5e451fb5df82815cbbc84c7859e86fc);
+            
+    
+            var marker_5ca9d93713e1795f6eca4fe3dd8efcbf = L.marker(
+                [-15.8316967, -48.052472],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_76d5d3f0daa143fc8ff6faca20255fc3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_a1d776e9caf29bdf6abce737f0022fd9 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_33f835fce2ac900d11241abafb1abbec = $(`<div id="html_33f835fce2ac900d11241abafb1abbec" style="width: 100.0%; height: 100.0%;">Ponto 7: Emergência obstétrica (Prioridade 4)</div>`)[0];
+                popup_a1d776e9caf29bdf6abce737f0022fd9.setContent(html_33f835fce2ac900d11241abafb1abbec);
+            
+        
+
+        marker_5ca9d93713e1795f6eca4fe3dd8efcbf.bindPopup(popup_a1d776e9caf29bdf6abce737f0022fd9)
+        ;
+
+        
+    
+    
+                marker_5ca9d93713e1795f6eca4fe3dd8efcbf.setIcon(icon_76d5d3f0daa143fc8ff6faca20255fc3);
+            
+    
+            var marker_72073e2aee405a55e250ec343aeb9c9f = L.marker(
+                [-15.8360516, -48.0517181],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_0b5fc841da62243fd23d56dee401d882 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f8400cefad88ffe59994e88deeb15ab1 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_8182be7886ae608ea15fbb43c4125470 = $(`<div id="html_8182be7886ae608ea15fbb43c4125470" style="width: 100.0%; height: 100.0%;">Ponto 8: Emergência obstétrica (Prioridade 4)</div>`)[0];
+                popup_f8400cefad88ffe59994e88deeb15ab1.setContent(html_8182be7886ae608ea15fbb43c4125470);
+            
+        
+
+        marker_72073e2aee405a55e250ec343aeb9c9f.bindPopup(popup_f8400cefad88ffe59994e88deeb15ab1)
+        ;
+
+        
+    
+    
+                marker_72073e2aee405a55e250ec343aeb9c9f.setIcon(icon_0b5fc841da62243fd23d56dee401d882);
+            
+    
+            var marker_08762b7b2e1ddfa1dcef5923d548ff53 = L.marker(
+                [-15.8373558, -48.0545297],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_eb03d39dac31be3b358c4e92f1f8a8e2 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0ef3eaac590eb0564a263099c0c919bc = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_32b23a73e4865caf5bf9108830ca097a = $(`<div id="html_32b23a73e4865caf5bf9108830ca097a" style="width: 100.0%; height: 100.0%;">Ponto 9: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_0ef3eaac590eb0564a263099c0c919bc.setContent(html_32b23a73e4865caf5bf9108830ca097a);
+            
+        
+
+        marker_08762b7b2e1ddfa1dcef5923d548ff53.bindPopup(popup_0ef3eaac590eb0564a263099c0c919bc)
+        ;
+
+        
+    
+    
+                marker_08762b7b2e1ddfa1dcef5923d548ff53.setIcon(icon_eb03d39dac31be3b358c4e92f1f8a8e2);
+            
+    
+            var marker_40a700a12f45eda2c1d9a59066f64ee6 = L.marker(
+                [-15.8064899, -48.0760231],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_a1cb02c45f8fc32e5e84319ff3351a8b = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_113dda8c032d0089ded2822b8e2ed359 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_9d966621fa84247e9bcde3aaa6dec0be = $(`<div id="html_9d966621fa84247e9bcde3aaa6dec0be" style="width: 100.0%; height: 100.0%;">Ponto 10: Emergência obstétrica (Prioridade 4)</div>`)[0];
+                popup_113dda8c032d0089ded2822b8e2ed359.setContent(html_9d966621fa84247e9bcde3aaa6dec0be);
+            
+        
+
+        marker_40a700a12f45eda2c1d9a59066f64ee6.bindPopup(popup_113dda8c032d0089ded2822b8e2ed359)
+        ;
+
+        
+    
+    
+                marker_40a700a12f45eda2c1d9a59066f64ee6.setIcon(icon_a1cb02c45f8fc32e5e84319ff3351a8b);
+            
+    
+            var marker_00489d093c42f9d0773bfd5eb9cd6fc5 = L.marker(
+                [-15.8356175, -48.0560153],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_ed9da00b51bc8ce78cc8cf9017f95ae3 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_f8024ac58596aa50f606314fdd43e2a4 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_80fee29e326333208955d54b63604e48 = $(`<div id="html_80fee29e326333208955d54b63604e48" style="width: 100.0%; height: 100.0%;">Ponto 11: Emergência obstétrica (Prioridade 4)</div>`)[0];
+                popup_f8024ac58596aa50f606314fdd43e2a4.setContent(html_80fee29e326333208955d54b63604e48);
+            
+        
+
+        marker_00489d093c42f9d0773bfd5eb9cd6fc5.bindPopup(popup_f8024ac58596aa50f606314fdd43e2a4)
+        ;
+
+        
+    
+    
+                marker_00489d093c42f9d0773bfd5eb9cd6fc5.setIcon(icon_ed9da00b51bc8ce78cc8cf9017f95ae3);
+            
+    
+            var marker_79126baf581270f7b1815cc4a3b9c95b = L.marker(
+                [-15.8821505, -48.0897198],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_68795056ce57ab24b2b6688541e85086 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_4ac86308f2f075fd1a0e293b3fb59498 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_461215c648ecd2beab4f1f66a715f6b5 = $(`<div id="html_461215c648ecd2beab4f1f66a715f6b5" style="width: 100.0%; height: 100.0%;">Ponto 12: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_4ac86308f2f075fd1a0e293b3fb59498.setContent(html_461215c648ecd2beab4f1f66a715f6b5);
+            
+        
+
+        marker_79126baf581270f7b1815cc4a3b9c95b.bindPopup(popup_4ac86308f2f075fd1a0e293b3fb59498)
+        ;
+
+        
+    
+    
+                marker_79126baf581270f7b1815cc4a3b9c95b.setIcon(icon_68795056ce57ab24b2b6688541e85086);
+            
+    
+            var marker_ca966e75c45660da9db895373af42c0c = L.marker(
+                [-15.8303533, -48.1416298],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_5a2bf834f730b90d6fab93c9126a7a1f = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_764b2754fc5f777949d9145247b435e8 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_001150b5cde9a3d4b58f25f5bf94ab3b = $(`<div id="html_001150b5cde9a3d4b58f25f5bf94ab3b" style="width: 100.0%; height: 100.0%;">Ponto 13: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_764b2754fc5f777949d9145247b435e8.setContent(html_001150b5cde9a3d4b58f25f5bf94ab3b);
+            
+        
+
+        marker_ca966e75c45660da9db895373af42c0c.bindPopup(popup_764b2754fc5f777949d9145247b435e8)
+        ;
+
+        
+    
+    
+                marker_ca966e75c45660da9db895373af42c0c.setIcon(icon_5a2bf834f730b90d6fab93c9126a7a1f);
+            
+    
+            var marker_7af2931c4da2df7cb654a7b9c94ae78d = L.marker(
+                [-15.8474725, -48.1151962],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_48bdeafb1c5e6114d8c62926423e64e7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_8ee7892deb1b45780ef7a82f40fddd98 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_fbc1b816f10b853f7f45f5d0b9254fbe = $(`<div id="html_fbc1b816f10b853f7f45f5d0b9254fbe" style="width: 100.0%; height: 100.0%;">Ponto 14: Medicamento hormonal (Prioridade 2)</div>`)[0];
+                popup_8ee7892deb1b45780ef7a82f40fddd98.setContent(html_fbc1b816f10b853f7f45f5d0b9254fbe);
+            
+        
+
+        marker_7af2931c4da2df7cb654a7b9c94ae78d.bindPopup(popup_8ee7892deb1b45780ef7a82f40fddd98)
+        ;
+
+        
+    
+    
+                marker_7af2931c4da2df7cb654a7b9c94ae78d.setIcon(icon_48bdeafb1c5e6114d8c62926423e64e7);
+            
+    
+            var marker_e19f431897ab64d9a0205db1c11efe91 = L.marker(
+                [-15.8426281, -48.1047045],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_9ddecd1fa77a725d1b8d09efa2f9f069 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "green",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_d473d4e81c243bf2cf16689cf7777210 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5e20a9b7e0d8630299f350b9214e4f21 = $(`<div id="html_5e20a9b7e0d8630299f350b9214e4f21" style="width: 100.0%; height: 100.0%;">Ponto 15: Pós-parto (Prioridade 1)</div>`)[0];
+                popup_d473d4e81c243bf2cf16689cf7777210.setContent(html_5e20a9b7e0d8630299f350b9214e4f21);
+            
+        
+
+        marker_e19f431897ab64d9a0205db1c11efe91.bindPopup(popup_d473d4e81c243bf2cf16689cf7777210)
+        ;
+
+        
+    
+    
+                marker_e19f431897ab64d9a0205db1c11efe91.setIcon(icon_9ddecd1fa77a725d1b8d09efa2f9f069);
+            
+    
+            var poly_line_83879a604875d2653dbb2b06ee7776b7 = L.polyline(
+                [[-15.8356175, -48.0560153], [-15.8316967, -48.052472], [-15.8064899, -48.0760231], [-15.8739572, -48.0727333], [-15.8426281, -48.1047045], [-15.8360516, -48.0517181], [-15.8373558, -48.0545297], [-15.8456813, -48.1119766], [-15.8303533, -48.1416298], [-15.8349656, -48.0514407], [-15.8367063, -48.054113], [-15.8304553, -48.1426266], [-15.8474725, -48.1151962], [-15.8821505, -48.0897198], [-15.8346988, -48.0568651]],
+                {"bubblingMouseEvents": true, "color": "black", "dashArray": null, "dashOffset": null, "fill": false, "fillColor": "black", "fillOpacity": 0.2, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "noClip": false, "opacity": 0.8, "smoothFactor": 1.0, "stroke": true, "weight": 3}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var marker_d5c5035c368948916e03eb00dd0a151b = L.marker(
+                [-15.8119, -48.0972],
+                {
+}
+            ).addTo(map_112bf50d9ef74a7d29c109bd74c71c24);
+        
+    
+            var icon_1817c791cd775ac582c358c1755f4610 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "purple",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_0c5db36625c8f9153d0b4b7a34555d11 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_4ac238d2ef495e5923bb4fdd2048ad68 = $(`<div id="html_4ac238d2ef495e5923bb4fdd2048ad68" style="width: 100.0%; height: 100.0%;">Geração: 0, Fitness: inf</div>`)[0];
+                popup_0c5db36625c8f9153d0b4b7a34555d11.setContent(html_4ac238d2ef495e5923bb4fdd2048ad68);
+            
+        
+
+        marker_d5c5035c368948916e03eb00dd0a151b.bindPopup(popup_0c5db36625c8f9153d0b4b7a34555d11)
+        ;
+
+        
+    
+    
+                marker_d5c5035c368948916e03eb00dd0a151b.setIcon(icon_1817c791cd775ac582c358c1755f4610);
+            
+</script>
+</html>

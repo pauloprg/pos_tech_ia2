@@ -18,8 +18,25 @@ PENALIDADE_TEMPERATURA = 180
 ESPERA_PROT_ESPECIAL = 1.5
 
 
+def haversine_distance(p1: ServicePoint, p2: ServicePoint) -> float:
+    # Raio da Terra em km
+    R = 6371.0
+    lat1_rad = math.radians(p1.lat)
+    lon1_rad = math.radians(p1.lon)
+    lat2_rad = math.radians(p2.lat)
+    lon2_rad = math.radians(p2.lon)
+    
+    dlat = lat2_rad - lat1_rad
+    dlon = lon2_rad - lon1_rad
+    
+    a = math.sin(dlat / 2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2)**2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    
+    return R * c
+
+
 def euclidean_distance(p1: ServicePoint, p2: ServicePoint) -> float:
-    return math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2)
+    return math.sqrt((p1.lat - p2.lat) ** 2 + (p1.lon - p2.lon) ** 2)
 
 
 def route_distance(route: List[ServicePoint]) -> float:
@@ -28,7 +45,7 @@ def route_distance(route: List[ServicePoint]) -> float:
 
     total = 0.0
     for i in range(len(route) - 1):
-        total += euclidean_distance(route[i], route[i + 1])
+        total += haversine_distance(route[i], route[i + 1])
     return total
 
 
@@ -103,7 +120,7 @@ def calculate_fitness(route: List[ServicePoint]) -> float:
         point = route[i]
 
         if i > 0:
-            dist = euclidean_distance(route[i - 1], point)
+            dist = haversine_distance(route[i - 1], point)
             travel_time = dist * FATOR_TEMPO
             total_cost += dist
             total_cost += refrigeration_penalty(point, travel_time)
