@@ -1,26 +1,19 @@
 # -*- coding: utf-8 -*-
 import pygame
-from pontos import ServicePoint
-from typing import List
 
 WHITE = (255, 255, 255)
 BLACK = (20, 20, 20)
 BLUE_MAIN = (0, 191, 255)
-PANEL_BG = (25, 25, 25)
-GRAY_TEXT = (170, 170, 170)
+GOLD = (255, 215, 0)
+GRAY_L = (170, 170, 170)
 
-PRIORITY_COLORS = {
-    4: (255, 50, 50), 3: (255, 165, 0), 2: (0, 200, 255), 1: (50, 255, 50)
-}
+PRIORITY_COLORS = {4: (255, 50, 50), 3: (255, 165, 0), 2: (0, 200, 255), 1: (50, 255, 50)}
 
 def draw_route_lines(screen, route):
     if len(route) < 2: return
     for i in range(len(route) - 1):
         p1, p2 = (route[i].x, route[i].y), (route[i+1].x, route[i+1].y)
-        
-        # Efeito de linha dupla para maior visibilidade sobre o mapa colorido
-        pygame.draw.line(screen, (255, 255, 255), p1, p2, 5) # Borda branca de contraste
-        pygame.draw.line(screen, (0, 191, 255), p1, p2, 3)   # Centro Ciano Vibrante
+        pygame.draw.line(screen, BLUE_MAIN, p1, p2, 4)
         pygame.draw.circle(screen, WHITE, p1, 3)
 
 def draw_service_points(screen, points, font):
@@ -29,45 +22,49 @@ def draw_service_points(screen, points, font):
         pygame.draw.circle(screen, color, (point.x, point.y), 9)
         pygame.draw.circle(screen, WHITE, (point.x, point.y), 9, 2)
         lbl = font.render(f"P{point.id}", True, WHITE)
-        bg_rect = lbl.get_rect(center=(point.x, point.y - 18))
-        pygame.draw.rect(screen, BLACK, bg_rect.inflate(4, 2))
-        screen.blit(lbl, bg_rect)
+        bg = lbl.get_rect(center=(point.x, point.y - 18))
+        pygame.draw.rect(screen, BLACK, bg.inflate(4, 2))
+        screen.blit(lbl, bg)
 
 def draw_side_panel(screen, panel_x, panel_width, window_height, title_font, text_font, 
-                    route, generation, best_fitness, fitness_history, scroll_offset):
+                    route, generation, best_fitness, fitness_history, scroll_offset, is_optimal):
     
-    pygame.draw.rect(screen, PANEL_BG, (panel_x, 0, panel_width, window_height))
+    pygame.draw.rect(screen, (30, 30, 30), (panel_x, 0, panel_width, window_height))
     pygame.draw.line(screen, BLUE_MAIN, (panel_x, 0), (panel_x, window_height), 2)
 
     margin = panel_x + 20
-    screen.blit(title_font.render("FINETUNE EM TEMPO REAL", True, BLUE_MAIN), (margin, 20))
-    screen.blit(text_font.render(f"Geração: {generation}", True, WHITE), (margin, 55))
-    screen.blit(text_font.render(f"Melhor Distância: {round(best_fitness, 2)} km", True, WHITE), (margin, 75))
+    
+    # Rótulo de Status
+    status_color = GOLD if is_optimal else BLUE_MAIN
+    status_txt = "GERAÇÃO ÓTIMA ATINGIDA" if is_optimal else f"GERAÇÃO: {generation}"
+    screen.blit(title_font.render(status_txt, True, status_color), (margin, 20))
+    screen.blit(text_font.render(f"Distância Atual: {round(best_fitness, 2)} km", True, WHITE), (margin, 50))
 
-    y_list = 110 - scroll_offset
+    # Lista Dinâmica
+    y_list = 100 - scroll_offset
     for i, p in enumerate(route):
-        if 110 < y_list < 580:
+        if 100 < y_list < 580:
             pygame.draw.rect(screen, PRIORITY_COLORS.get(p.prioridade), (margin, y_list + 4, 6, 12))
-            screen.blit(text_font.render(f"{i+1}º -> Ponto {p.id}", True, WHITE), (margin + 15, y_list))
+            screen.blit(text_font.render(f"{i+1}º -> Ponto {p.id} (Prio {p.prioridade})", True, WHITE), (margin + 15, y_list))
         y_list += 22
 
-    # --- GRÁFICO COM EIXOS ---
-    graph_x, graph_y, graph_w, graph_h = margin + 35, 620, panel_width - 75, 140
-    pygame.draw.rect(screen, (10, 10, 10), (graph_x, graph_y, graph_w, graph_h))
-    pygame.draw.line(screen, WHITE, (graph_x, graph_y), (graph_x, graph_y + graph_h), 2)
-    pygame.draw.line(screen, WHITE, (graph_x, graph_y + graph_h), (graph_x + graph_w, graph_y + graph_h), 2)
+    # --- GRÁFICO CARTESIANO COM EIXOS X, Y ---
+    gx, gy, gw, gh = margin + 40, 620, panel_width - 80, 140
+    pygame.draw.line(screen, WHITE, (gx, gy), (gx, gy + gh), 2) # Eixo Y
+    pygame.draw.line(screen, WHITE, (gx, gy + gh), (gx + gw, gy + gh), 2) # Eixo X
 
     if len(fitness_history) > 2:
         max_f, min_f = max(fitness_history), min(fitness_history)
         rng = max_f - min_f if max_f != min_f else 1
         
-        # Valores dos Eixos
-        screen.blit(text_font.render(f"{int(max_f)}", True, GRAY_TEXT), (margin - 5, graph_y))
-        screen.blit(text_font.render(f"{int(min_f)}", True, GRAY_TEXT), (margin - 5, graph_y + graph_h - 15))
+        # Rótulos Y
+        screen.blit(text_font.render(f"{int(max_f)}", True, GRAY_L), (margin, gy))
+        screen.blit(text_font.render(f"{int(min_f)}", True, GRAY_L), (margin, gy + gh - 15))
         
-        pts = [(graph_x + (i * graph_w / len(fitness_history)), 
-                (graph_y + graph_h) - ((f - min_f) / rng * (graph_h - 10))) 
-               for i, f in enumerate(fitness_history)]
-        pygame.draw.lines(screen, BLUE_MAIN, False, pts, 2)
+        # Rótulos X
+        screen.blit(text_font.render(f"G:{max(0, generation-150)}", True, GRAY_L), (gx, gy + gh + 5))
+        screen.blit(text_font.render(f"G:{generation}", True, GRAY_L), (gx + gw - 40, gy + gh + 5))
 
-    return y_list
+        pts = [(gx + (i * gw / len(fitness_history)), (gy + gh) - ((f - min_f) / rng * (gh - 10))) 
+               for i, f in enumerate(fitness_history)]
+        pygame.draw.lines(screen, status_color, False, pts, 2)
