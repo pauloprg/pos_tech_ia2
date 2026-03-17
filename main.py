@@ -83,6 +83,8 @@ def main():
                         best_route, generation, best_fitness, fitness_history, 0, is_optimal)
         draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
         if popup and popup.visivel: popup.draw(screen)
+
+        draw_convergence_graph(screen, MAP_WIDTH + 30, 530, PANEL_WIDTH - 60, 160, fitness_history)
         
         pygame.display.flip()
         clock.tick(FPS)

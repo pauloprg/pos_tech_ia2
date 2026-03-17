@@ -115,20 +115,34 @@ def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, o
         
         y_s += 28 # Espaçamento entre as linhas
 
-def draw_cartesian_grid(screen, width, height, gap=50):
-    """Desenha o plano cartesiano com grades e marcações de pixels."""
-    font_grid = pygame.font.SysFont("arial", 10)
-    
-    # Desenha as linhas verticais (Eixo X)
-    for x in range(0, width, gap):
-        pygame.draw.line(screen, GRAY_GRID, (x, 0), (x, height), 1)
-        # Números das coordenadas no topo
-        txt = font_grid.render(f"{x}", True, GRAY_AXIS)
-        screen.blit(txt, (x + 2, 5))
 
-    # Desenha as linhas horizontais (Eixo Y)
-    for y in range(0, height, gap):
-        pygame.draw.line(screen, GRAY_GRID, (0, y), (width, y), 1)
-        # Números das coordenadas na lateral
-        txt = font_grid.render(f"{y}", True, GRAY_AXIS)
-        screen.blit(txt, (5, y + 2))
+def draw_convergence_graph(screen, x, y, w, h, history):
+    """Desenha o gráfico de evolução (Fitness X Geração) com linha amarela."""
+    # Fundo do gráfico
+    pygame.draw.rect(screen, (15, 15, 15), (x, y, w, h))
+    pygame.draw.rect(screen, (60, 60, 60), (x, y, w, h), 1)
+    
+    if len(history) < 2: return
+
+    # Grade de fundo (linhas horizontais)
+    for i in range(1, 4):
+        gy = y + (h / 4) * i
+        pygame.draw.line(screen, (40, 40, 40), (x, gy), (x + w, gy), 1)
+
+    max_f, min_f = max(history), min(history)
+    rng = max_f - min_f if max_f != min_f else 1
+    
+    # Mapeamento dos pontos
+    points = []
+    for i, f in enumerate(history):
+        px = x + (i / (len(history)-1)) * w
+        py = y + h - ((f - min_f) / rng) * h
+        points.append((px, py))
+    
+    # LINHA AMARELA (GOLD)
+    pygame.draw.lines(screen, (255, 215, 0), False, points, 2)
+    
+    # Legendas de valores
+    font_mini = pygame.font.SysFont("arial", 10)
+    screen.blit(font_mini.render(f"Max: {round(max_f,1)}", True, (150,150,150)), (x+5, y+5))
+    screen.blit(font_mini.render(f"Min: {round(min_f,1)}", True, (255, 215, 0)), (x+5, y+h-15))
