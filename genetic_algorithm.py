@@ -15,31 +15,33 @@ def haversine_distance(p1, p2):
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
+def calculate_total_distance_km(route):
+    """Somatória da distância geográfica (KM) entre pontos consecutivos."""
+    if not route or len(route) < 2:
+        return 0.0
+    total_km = 0.0
+    for i in range(len(route) - 1):
+        total_km += haversine_distance(route[i], route[i + 1])
+    return total_km
+
+def calculate_priority_penalty(route):
+    """Penalidade clínica por atrasar prioridades altas (mesma unidade do fitness)."""
+    if not route:
+        return 0.0
+    penalty = 0.0
+    for i, p in enumerate(route):
+        peso_prioridade = p.prioridade  # 1..4
+        penalty += (i * (peso_prioridade ** 2)) * 10
+    return penalty
+
 def calculate_fitness(route):
     """
     Calcula o custo da rota. 
     Quanto MENOR o valor, MELHOR a rota.
     """
-    total_km = 0
-    penalty = 0
-    
-    for i in range(len(route)):
-        # 1. Somatória da distância (Custo Geográfico)
-        if i < len(route) - 1:
-            total_km += haversine_distance(route[i], route[i+1])
-        
-        # 2. Lógica de Penalidade por Prioridade (Custo Clínico)
-        # Se um ponto de prioridade 4 (Emergência) aparecer tarde na rota (i alto),
-        # o fitness sobe drasticamente, forçando o algoritmo a movê-lo para o início.
-        # i+1 representa a ordem (1º, 2º, 3º...). 
-        # Multiplicamos a posição pelo peso da prioridade.
-        peso_prioridade = route[i].prioridade # Valores de 1 a 4
-        
-        # Penalidade: Prioridade alta (4) em posição alta (ex: 15º) = Custo enorme.
-        # Usamos (i * peso) para que o GA sinta "dor" ao atrasar emergências.
-        penalty += (i * (peso_prioridade ** 2)) * 10 
-
-    # O Fitness final é a distância física + as penalidades clínicas
+    total_km = calculate_total_distance_km(route)
+    penalty = calculate_priority_penalty(route)
+    # Fitness final = distância física + penalidades clínicas
     return total_km + penalty
 
 def generate_random_population(points, size):

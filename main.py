@@ -76,11 +76,13 @@ def main():
 
         screen.fill(BLACK)
         if map_surface: screen.blit(map_surface, (0, 0))
+        # Desenha a rota e, sobre ela, os pontos na ordem ótima (1, 2, 3...)
         draw_route_lines(screen, best_route)
-        draw_service_points(screen, service_points, pygame.font.SysFont("arial", 11))
+        draw_service_points(screen, best_route if best_route else service_points, pygame.font.SysFont("arial", 11))
+        best_distance_km = calculate_total_distance_km(best_route) if best_route else 0.0
         draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT, 
                         pygame.font.SysFont("arial", 18, True), pygame.font.SysFont("arial", 13),
-                        best_route, generation, best_fitness, fitness_history, 0, is_optimal)
+                        best_route, generation, best_fitness, best_distance_km, fitness_history, 0, is_optimal)
         
         draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
         if popup and popup.visivel: popup.draw(screen)

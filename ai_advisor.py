@@ -2,11 +2,12 @@
 from groq import Groq
 import os
 
-# Substitua pela sua chave da Groq (gsk_...)
-API_KEY = os.getenv("GROQ_API_KEY")
+# Configure via variável de ambiente (evita chave hardcoded no código)
+# Aceita `GROQ_API_KEY` (preferido) ou `API_KEY` (fallback).
+API_KEY = os.getenv("GROQ_API_KEY") or os.getenv("API_KEY") or ""
 
 client = None
-if "gsk_" in API_KEY:
+if isinstance(API_KEY, str) and API_KEY.startswith("gsk_"):
     client = Groq(api_key=API_KEY)
 
 historico_conversa = []

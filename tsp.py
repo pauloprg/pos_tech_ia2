@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 import random
 import itertools
-from genetic_algorithm import mutate, order_crossover, generate_random_population, calculate_fitness, sort_population, default_problems
+from genetic_algorithm_aula import mutate, order_crossover, generate_random_population, calculate_fitness, sort_population, default_problems
 from draw_functions import draw_paths, draw_plot, draw_cities
 import sys
 import numpy as np

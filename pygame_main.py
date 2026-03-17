@@ -17,6 +17,7 @@ from genetic_algorithm import (
     generate_random_population,
     evolve_population
 )
+from genetic_algorithm import calculate_total_distance_km
 
 WINDOW_WIDTH = 1500
 WINDOW_HEIGHT = 800
@@ -98,7 +99,8 @@ def main():
         screen.blit(map_surface, (0, 0))
 
         draw_route_lines(screen, best_route)
-        draw_service_points(screen, service_points, small_font)
+        # Usa a melhor rota para numerar os pontos na ordem visitada
+        draw_service_points(screen, best_route if best_route else service_points, small_font)
         
         max_scroll = draw_side_panel(
             screen=screen,
@@ -110,6 +112,7 @@ def main():
             route=best_route,
             generation=generation,
             best_fitness=best_fitness,
+            dist_km=calculate_total_distance_km(best_route),
             fitness_history=fitness_history,
             scroll_offset=scroll_offset
         )

@@ -80,10 +80,73 @@ def draw_route_lines(screen, route):
         pygame.draw.line(screen, BLUE_NEON, (route[i].x, route[i].y), (route[i+1].x, route[i+1].y), 3)
 
 def draw_service_points(screen, points, font):
-    for p in points:
-        pygame.draw.circle(screen, PRIORITY_COLORS.get(p.prioridade, WHITE), (p.x, p.y), 9)
+    """
+    Desenha os pontos no mapa com:
+    - cor pela prioridade
+    - número sequencial da rota (1, 2, 3...) + código curto ao lado
 
-def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, opt):
+    A ordem é dada pela lista `points` recebida. Para mostrar a ordem da
+    rota ótima, basta passar `best_route` em vez de `service_points`.
+    """
+    if not points:
+        return
+
+    for idx, p in enumerate(points, start=1):
+        center = (p.x, p.y)
+        color = PRIORITY_COLORS.get(p.prioridade, WHITE)
+        pygame.draw.circle(screen, color, center, 9)
+
+        # Número da ordem (negrito, sobre o ponto)
+        num_font = pygame.font.SysFont("arial", 11, bold=True)
+        num_surf = num_font.render(str(idx), True, BLACK)
+        num_rect = num_surf.get_rect(center=center)
+        screen.blit(num_surf, num_rect)
+
+        # Código curto ao lado do ponto
+        code_text = f"{p.codigo[:12]}"
+        code_surf = font.render(code_text, True, BLACK)
+        screen.blit(code_surf, (p.x + 12, p.y - 8))
+
+def draw_side_panel(
+    screen,
+    px=None,
+    pw=None,
+    vh=None,
+    f1=None,
+    f2=None,
+    route=None,
+    gen=None,
+    fit=None,
+    dist_km=0.0,
+    hist=None,
+    scroll=0,
+    opt=False,
+    **kwargs,
+):
+    # Compatibilidade com chamadas usando keywords (ex: panel_x/panel_width/window_height)
+    if px is None:
+        px = kwargs.get("panel_x", 0)
+    if pw is None:
+        pw = kwargs.get("panel_width", 0)
+    if vh is None:
+        vh = kwargs.get("window_height", 0)
+    if f1 is None:
+        f1 = kwargs.get("title_font")
+    if f2 is None:
+        f2 = kwargs.get("text_font")
+    if route is None:
+        route = kwargs.get("route", [])
+    if gen is None:
+        gen = kwargs.get("generation", 0)
+    if fit is None:
+        fit = kwargs.get("best_fitness", 0.0)
+    if hist is None:
+        hist = kwargs.get("fitness_history", [])
+    scroll = kwargs.get("scroll_offset", scroll)
+    opt = kwargs.get("is_optimal", opt)
+
+    if route is None:
+        route = []
     # Desenha o fundo do painel
     pygame.draw.rect(screen, (30, 30, 30), (px, 0, pw, vh))
     pygame.draw.line(screen, BLUE_NEON, (px, 0), (px, vh), 2)
@@ -91,7 +154,8 @@ def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, o
     margin = px + 20
     txt_gen = "ROTA OTIMIZADA!" if opt else f"GERAÇÃO: {gen}"
     screen.blit(f1.render(txt_gen, True, GOLD if opt else BLUE_NEON), (margin, 25))
-    screen.blit(f2.render(f"Distância Total: {round(fit, 2)} km", True, WHITE), (margin, 55))
+    screen.blit(f2.render(f"Distância Total: {round(dist_km, 2)} km", True, WHITE), (margin, 55))
+    screen.blit(f2.render(f"Custo (fitness): {round(fit, 2)}", True, GRAY_LIGHT), (margin, 72))
     
     # Linha separadora
     pygame.draw.line(screen, (70, 70, 70), (px + 10, 85), (px + pw - 10, 85), 1)
@@ -127,7 +191,7 @@ def draw_convergence_graph(screen, x, y, w, h, history):
 
     # Labels dos Eixos
     # Eixo Y (Custo) - Rotacionado visualmente pelo contexto
-    label_y = font_label.render("CUSTO (KM)", True, GRAY_LIGHT)
+    label_y = font_label.render("CUSTO (FITNESS)", True, GRAY_LIGHT)
     screen.blit(label_y, (x - 10, y - 15))
     
     # Eixo X (Gerações)
