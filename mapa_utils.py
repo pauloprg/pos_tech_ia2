@@ -1,41 +1,81 @@
 # -*- coding: utf-8 -*-
-import random, pygame, json, os
+import random
+import pygame
+import json
+import os
 from pontos import ServicePoint
 
-LAT_MIN, LAT_MAX = -15.8600, -15.7900
-LON_MIN, LON_MAX = -48.1400, -48.0700
+# --- Configurações Geográficas ---
+LAT_MIN, LAT_MAX = -15.85, -15.80
+LON_MIN, LON_MAX = -48.15, -48.05
 
-def load_and_scale_map(map_path, width, height):
-    if os.path.exists(map_path):
-        return pygame.transform.scale(pygame.image.load(map_path), (width, height))
-    return None
+TIPOS_ATENDIMENTO = [
+    {"atendimento": "Emergência obstétrica", "prioridade": 4, "int_qtde": (1, 1), "horario": (0, 23), "tempo_atendimento": (0.8, 1.5), "temperatura": False, "prot_especial": False, "peso": 20},
+    {"atendimento": "Violência doméstica", "prioridade": 3, "int_qtde": (1, 1), "horario": (6, 20), "tempo_atendimento": (0.8, 1.3), "temperatura": False, "prot_especial": True, "peso": 15},
+    {"atendimento": "Medicamento hormonal", "prioridade": 2, "int_qtde": (1, 4), "horario": (8, 18), "tempo_atendimento": (0.2, 0.5), "temperatura": True, "prot_especial": False, "peso": 30},
+    {"atendimento": "Pós-parto", "prioridade": 1, "int_qtde": (1, 2), "horario": (9, 17), "tempo_atendimento": (0.5, 1.0), "temperatura": False, "prot_especial": False, "peso": 35}
+]
 
-def latlon_to_pixel(lat, lon, w, h):
-    x = int((lon - LON_MIN) / (LON_MAX - LON_MIN) * w)
-    y = int((LAT_MAX - lat) / (LAT_MAX - LAT_MIN) * h)
-    return x, y
+def load_and_scale_map(image_path: str, map_width: int, map_height: int) -> pygame.Surface:
+    image = pygame.image.load(image_path)
+    return pygame.transform.smoothscale(image, (map_width, map_height))
 
-def load_coordinates_from_jsonl(path):
+def load_coordinates_from_jsonl(file_path):
+    """Extrai lat/lon das linhas que contém coordenadas no campo input ou output."""
     coords = []
-    if os.path.exists(path):
-        with open(path, 'r', encoding='utf-8') as f:
-            for line in f:
-                try:
-                    d = json.loads(line)
-                    coords.append((d['lat'], d['lon']))
-                except: continue
+    if not os.path.exists(file_path):
+        return coords
+
+    with open(file_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            try:
+                data = json.loads(line)
+                # Verifica se a instrução pede endereço (onde o input é a coordenada)
+                # Exemplo: "input": "-15.802493, -48.118458"
+                texto_alvo = data.get("input", "")
+                if "," in texto_alvo and texto_alvo.split(",")[0].strip().startswith("-15"):
+                    partes = texto_alvo.split(",")
+                    lat = float(partes[0].strip())
+                    lon = float(partes[1].strip())
+                    rua = data.get("output", "Ceilândia")
+                    coords.append({"lat": lat, "lon": lon, "nome_rua": rua})
+            except:
+                continue
     return coords
 
-def generate_service_points(coordinates, n_points, w, h):
-    # Centro da Ceilândia para concentrar os pontos
-    C_LAT, C_LON, OFFSET = -15.8219, -48.1072, 0.015
-    service_points = []
-    tipos = [("Emergência", 4), ("Violência", 3), ("Medicamento", 2), ("Pós-parto", 1)]
+def generate_service_points(coords_data, n_points, map_width, map_height):
+    if not coords_data:
+        return []
 
-    for i in range(n_points):
-        lat = random.uniform(C_LAT - OFFSET, C_LAT + OFFSET)
-        lon = random.uniform(C_LON - OFFSET, C_LON + OFFSET)
-        x, y = latlon_to_pixel(lat, lon, w, h)
-        t_nome, prio = random.choice(tipos)
-        service_points.append(ServicePoint(i+1, lat, lon, x, y, f"C-{i}", t_nome, prio, 1, 8, 18, 1.0, False, False))
-    return service_points
+    selected = random.sample(coords_data, min(n_points, len(coords_data)))
+    points = []
+
+    for i, data in enumerate(selected, start=1):
+        # Pixels para o Pygame
+        x = int((data['lon'] - LON_MIN) / (LON_MAX - LON_MIN) * map_width)
+        y = int((LAT_MAX - data['lat']) / (LAT_MAX - LAT_MIN) * map_height)
+        
+        profile = random.choices(
+            TIPOS_ATENDIMENTO,
+            weights=[item["peso"] for item in TIPOS_ATENDIMENTO],
+            k=1
+        )[0]
+
+        # Agora passamos lat e lon explicitamente para o construtor
+        points.append(ServicePoint(
+            id=i, 
+            x=x, 
+            y=y,
+            lat=data['lat'], # <--- PASSANDO LATITUDE REAL
+            lon=data['lon'], # <--- PASSANDO LONGITUDE REAL
+            codigo=data['nome_rua'],
+            tipo_atendimento=profile["atendimento"],
+            prioridade=profile["prioridade"],
+            quantidade=random.randint(*profile["int_qtde"]),
+            tempo_inicio=profile["horario"][0],
+            tempo_fim=profile["horario"][1],
+            tempo_atendimento=round(random.uniform(*profile["tempo_atendimento"]), 2),
+            temperatura_controlada=profile["temperatura"],
+            protocolo_especial=profile["prot_especial"]
+        ))
+    return points

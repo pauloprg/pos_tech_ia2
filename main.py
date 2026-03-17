@@ -5,15 +5,14 @@ from renderer import *
 from genetic_algorithm import *
 from ai_advisor import *
 
-# CONSTANTES GLOBAIS - GARANTA QUE ESTEJAM AQUI
 WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 800
 MAP_WIDTH, PANEL_WIDTH = 1000, 400
-FPS = 30 
+FPS = 30 # Definido globalmente
 
 def main():
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT), pygame.DOUBLEBUF)
-    pygame.display.set_caption("Saúde da Mulher - Ceilândia (Llama 3 Chat)")
+    pygame.display.set_caption("Saúde da Mulher - Ceilândia")
     clock = pygame.time.Clock()
     
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -29,7 +28,6 @@ def main():
     popup = None
     best_route = []
 
-    # Mapa de Fundo
     try:
         map_surface = load_and_scale_map(os.path.join(BASE_DIR, "mapa_vibrante.png"), MAP_WIDTH, WINDOW_HEIGHT)
     except:
@@ -39,33 +37,24 @@ def main():
     while running:
         mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: 
-                running = False
+            if event.type == pygame.QUIT: running = False
             
-            # --- EVENTOS DO POPUP (CHAT) ---
             if popup and popup.visivel:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE: 
-                        popup.visivel = False
+                    if event.key == pygame.K_ESCAPE: popup.visivel = False
                     elif event.key == pygame.K_RETURN:
                         if popup.input_usuario.strip():
                             msg = popup.input_usuario
                             popup.input_usuario = ""
                             popup.carregando = True
-                            # Força o desenho do estado "carregando"
-                            popup.draw(screen)
-                            pygame.display.flip()
-                            
+                            popup.draw(screen); pygame.display.flip()
                             res = enviar_mensagem_chat(msg)
                             popup.adicionar_mensagem("Maitê", msg)
                             popup.adicionar_mensagem("IA", res)
-                    elif event.key == pygame.K_BACKSPACE: 
-                        popup.input_usuario = popup.input_usuario[:-1]
-                    else: 
-                        popup.input_usuario += event.unicode
+                    elif event.key == pygame.K_BACKSPACE: popup.input_usuario = popup.input_usuario[:-1]
+                    else: popup.input_usuario += event.unicode
                 continue 
 
-            # Clique no Botão
             if event.type == pygame.MOUSEBUTTONDOWN:
                 btn_rect = pygame.Rect(MAP_WIDTH + 50, 530, 300, 45)
                 if btn_rect.collidepoint(mouse_pos) and is_optimal:
@@ -73,42 +62,30 @@ def main():
                         briefing = gerar_briefing_vibrante(best_route)
                         inicializar_chat(best_route)
                         popup = BriefingPopup(briefing)
-                    else: 
-                        popup.visivel = True
+                    else: popup.visivel = True
 
-        # Evolução
         if not is_optimal:
             generation += 1
             population, cur_best, cur_fit = evolve_population(population, 100, 0.25)
             if cur_fit < best_fitness:
                 best_fitness, best_route, stable_count = cur_fit, cur_best[:], 0
-            else: 
-                stable_count += 1
-            
-            if stable_count > 500: 
-                is_optimal = True
-            
+            else: stable_count += 1
+            if stable_count > 500: is_optimal = True
             fitness_history.append(best_fitness)
             if len(fitness_history) > 150: fitness_history.pop(0)
 
-        # Renderização
-        screen.fill((20,20,20))
+        screen.fill(BLACK)
         if map_surface: screen.blit(map_surface, (0, 0))
-        
         draw_route_lines(screen, best_route)
         draw_service_points(screen, service_points, pygame.font.SysFont("arial", 11))
-        
         draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT, 
                         pygame.font.SysFont("arial", 18, True), pygame.font.SysFont("arial", 13),
                         best_route, generation, best_fitness, fitness_history, 0, is_optimal)
-        
         draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
-        
-        if popup and popup.visivel: 
-            popup.draw(screen)
+        if popup and popup.visivel: popup.draw(screen)
         
         pygame.display.flip()
-        clock.tick(FPS) # <--- O erro estava aqui
+        clock.tick(FPS)
 
     pygame.quit()
     sys.exit()
