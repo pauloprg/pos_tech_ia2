@@ -5,9 +5,11 @@ import json
 import os
 from pontos import ServicePoint
 
-# --- Configurações Geográficas ---
-LAT_MIN, LAT_MAX = -15.85, -15.80
-LON_MIN, LON_MAX = -48.15, -48.05
+# NOVOS LIMITES (ZOOM OUT) - Abrangendo mais áreas ao redor de Ceilândia
+LAT_MAX = -15.7000  # Subiu um pouco (mais ao norte)
+LAT_MIN = -15.9500  # Desceu um pouco (mais ao sul)
+LON_MIN = -48.2500  # Abriu para a esquerda (oeste)
+LON_MAX = -47.9500  # Abriu para a direita (leste - rumo ao Plano Piloto)
 
 TIPOS_ATENDIMENTO = [
     {"atendimento": "Emergência obstétrica", "prioridade": 4, "int_qtde": (1, 1), "horario": (0, 23), "tempo_atendimento": (0.8, 1.5), "temperatura": False, "prot_especial": False, "peso": 20},
@@ -68,7 +70,8 @@ def generate_service_points(coords_data, n_points, map_width, map_height):
             y=y,
             lat=data['lat'], # <--- PASSANDO LATITUDE REAL
             lon=data['lon'], # <--- PASSANDO LONGITUDE REAL
-            codigo=data['nome_rua'],
+            #data['nome_rua'] somente os 15 primeiros caracteres para evitar textos longos
+            codigo=data['nome_rua'][:15],
             tipo_atendimento=profile["atendimento"],
             prioridade=profile["prioridade"],
             quantidade=random.randint(*profile["int_qtde"]),

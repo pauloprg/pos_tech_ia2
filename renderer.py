@@ -7,6 +7,9 @@ WHITE, BLACK, BLUE_NEON = (255, 255, 255), (20, 20, 20), (0, 191, 255)
 GOLD, GRAY_DARK, GRAY_LIGHT = (255, 215, 0), (40, 40, 45), (150, 150, 150)
 PRIORITY_COLORS = {4: (255, 50, 50), 3: (255, 165, 0), 2: (0, 200, 255), 1: (50, 255, 50)}
 
+GRAY_GRID = (50, 50, 50)
+GRAY_AXIS = (80, 80, 80)
+
 class BriefingPopup:
     def __init__(self, texto_inicial):
         self.historico_formatado = [] 
@@ -81,21 +84,51 @@ def draw_service_points(screen, points, font):
         pygame.draw.circle(screen, PRIORITY_COLORS.get(p.prioridade, WHITE), (p.x, p.y), 9)
 
 def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, opt):
+    # Desenha o fundo do painel
     pygame.draw.rect(screen, (30, 30, 30), (px, 0, pw, vh))
     pygame.draw.line(screen, BLUE_NEON, (px, 0), (px, vh), 2)
-    margin = px + 25
+    
+    margin = px + 20
     txt_gen = "ROTA OTIMIZADA!" if opt else f"GERAÇÃO: {gen}"
     screen.blit(f1.render(txt_gen, True, GOLD if opt else BLUE_NEON), (margin, 25))
-    screen.blit(f2.render(f"Distância: {round(fit, 2)} km", True, WHITE), (margin, 55))
+    screen.blit(f2.render(f"Distância Total: {round(fit, 2)} km", True, WHITE), (margin, 55))
+    
+    # Linha separadora
+    pygame.draw.line(screen, (70, 70, 70), (px + 10, 85), (px + pw - 10, 85), 1)
+
+    # Início da lista de pontos
     y_s = 100 - scroll
+    
     for i, p in enumerate(route):
-        if 100 < y_s < 520:
-            pygame.draw.rect(screen, PRIORITY_COLORS.get(p.prioridade), (margin, y_s+4, 6, 12))
-            screen.blit(f2.render(f"{i+1}º: {p.codigo[:28]}", True, WHITE), (margin+15, y_s))
-        y_s += 25
-    gx, gy, gw, gh = px + 50, 620, pw - 80, 140
-    pygame.draw.rect(screen, (20,20,20), (gx, gy, gw, gh))
-    if len(hist) > 2:
-        max_h, min_h = max(hist), min(hist)
-        pts = [(gx+(i*gw/len(hist)), (gy+gh)-((val-min_h)/(max_h-min_h+1)*gh)) for i,val in enumerate(hist)]
-        pygame.draw.lines(screen, GOLD if opt else BLUE_NEON, False, pts, 2)
+        # Só renderiza se estiver dentro da visão vertical da tela para evitar erros de blit
+        if 80 < y_s < vh - 20:
+            # Texto solicitado: Ordem, Código, Tipo e Tempo
+            # Ex: 1. CEI-123 | Parto | 0.5h
+            info_texto = f"{i+1}. {p.codigo} | {p.tipo_atendimento} | {p.tempo_atendimento}h"
+            
+            # Cor baseada na prioridade (usando seu dicionário PRIORITY_COLORS)
+            cor = PRIORITY_COLORS.get(p.prioridade, WHITE)
+            
+            # Renderização
+            txt_surface = f2.render(info_texto, True, cor)
+            screen.blit(txt_surface, (margin, y_s))
+        
+        y_s += 28 # Espaçamento entre as linhas
+
+def draw_cartesian_grid(screen, width, height, gap=50):
+    """Desenha o plano cartesiano com grades e marcações de pixels."""
+    font_grid = pygame.font.SysFont("arial", 10)
+    
+    # Desenha as linhas verticais (Eixo X)
+    for x in range(0, width, gap):
+        pygame.draw.line(screen, GRAY_GRID, (x, 0), (x, height), 1)
+        # Números das coordenadas no topo
+        txt = font_grid.render(f"{x}", True, GRAY_AXIS)
+        screen.blit(txt, (x + 2, 5))
+
+    # Desenha as linhas horizontais (Eixo Y)
+    for y in range(0, height, gap):
+        pygame.draw.line(screen, GRAY_GRID, (0, y), (width, y), 1)
+        # Números das coordenadas na lateral
+        txt = font_grid.render(f"{y}", True, GRAY_AXIS)
+        screen.blit(txt, (5, y + 2))
