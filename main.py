@@ -49,7 +49,7 @@ def main():
                             popup.carregando = True
                             popup.draw(screen); pygame.display.flip()
                             res = enviar_mensagem_chat(msg)
-                            popup.adicionar_mensagem("Maitê", msg)
+                            popup.adicionar_mensagem("Gerreiro", msg)
                             popup.adicionar_mensagem("IA", res)
                     elif event.key == pygame.K_BACKSPACE: popup.input_usuario = popup.input_usuario[:-1]
                     else: popup.input_usuario += event.unicode
@@ -81,10 +81,11 @@ def main():
         draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT, 
                         pygame.font.SysFont("arial", 18, True), pygame.font.SysFont("arial", 13),
                         best_route, generation, best_fitness, fitness_history, 0, is_optimal)
+        
         draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
         if popup and popup.visivel: popup.draw(screen)
 
-        draw_convergence_graph(screen, MAP_WIDTH + 30, 530, PANEL_WIDTH - 60, 160, fitness_history)
+        draw_convergence_graph(screen, MAP_WIDTH + 30, 600, PANEL_WIDTH - 60, 160, fitness_history)
         
         pygame.display.flip()
         clock.tick(FPS)

@@ -117,32 +117,44 @@ def draw_side_panel(screen, px, pw, vh, f1, f2, route, gen, fit, hist, scroll, o
 
 
 def draw_convergence_graph(screen, x, y, w, h, history):
-    """Desenha o gráfico de evolução (Fitness X Geração) com linha amarela."""
-    # Fundo do gráfico
+    """Desenha o gráfico de evolução com labels nos eixos X e Y."""
+    # Fundo e borda do gráfico
     pygame.draw.rect(screen, (15, 15, 15), (x, y, w, h))
-    pygame.draw.rect(screen, (60, 60, 60), (x, y, w, h), 1)
+    pygame.draw.rect(screen, (80, 80, 80), (x, y, w, h), 1)
     
-    if len(history) < 2: return
+    font_mini = pygame.font.SysFont("arial", 10)
+    font_label = pygame.font.SysFont("arial", 11, bold=True)
 
-    # Grade de fundo (linhas horizontais)
-    for i in range(1, 4):
+    # Labels dos Eixos
+    # Eixo Y (Custo) - Rotacionado visualmente pelo contexto
+    label_y = font_label.render("CUSTO (KM)", True, GRAY_LIGHT)
+    screen.blit(label_y, (x - 10, y - 15))
+    
+    # Eixo X (Gerações)
+    label_x = font_label.render("EVOLUÇÃO (GERAÇÕES)", True, GRAY_LIGHT)
+    screen.blit(label_x, (x + w - 120, y + h + 5))
+
+    if len(history) < 2:
+        screen.blit(font_mini.render("Aguardando dados...", True, GRAY_LIGHT), (x + 10, y + h//2))
+        return
+
+    # Grade de fundo
+    for i in range(1, 5):
         gy = y + (h / 4) * i
         pygame.draw.line(screen, (40, 40, 40), (x, gy), (x + w, gy), 1)
 
     max_f, min_f = max(history), min(history)
     rng = max_f - min_f if max_f != min_f else 1
     
-    # Mapeamento dos pontos
     points = []
     for i, f in enumerate(history):
         px = x + (i / (len(history)-1)) * w
         py = y + h - ((f - min_f) / rng) * h
         points.append((px, py))
     
-    # LINHA AMARELA (GOLD)
-    pygame.draw.lines(screen, (255, 215, 0), False, points, 2)
+    # Linha de evolução Amarela
+    pygame.draw.lines(screen, GOLD, False, points, 2)
     
-    # Legendas de valores
-    font_mini = pygame.font.SysFont("arial", 10)
-    screen.blit(font_mini.render(f"Max: {round(max_f,1)}", True, (150,150,150)), (x+5, y+5))
-    screen.blit(font_mini.render(f"Min: {round(min_f,1)}", True, (255, 215, 0)), (x+5, y+h-15))
+    # Valores de referência nos cantos
+    screen.blit(font_mini.render(f"{round(max_f,1)}", True, GRAY_LIGHT), (x + w + 5, y))
+    screen.blit(font_mini.render(f"{round(min_f,1)}", True, GOLD), (x + w + 5, y + h - 10))
