@@ -1,3 +1,109 @@
+# ===== renderer.py (COMPLETO ATUALIZADO) =====
+# -*- coding: utf-8 -*-
+import pygame
+import time
+
+WHITE = (255, 255, 255)
+BLACK = (20, 20, 20)
+BLUE_NEON = (0, 191, 255)
+GOLD = (255, 215, 0)
+GRAY_DARK = (40, 40, 45)
+GRAY_LIGHT = (150, 150, 150)
+
+COLOR_USER = (0, 180, 255)
+COLOR_AI = (120, 120, 130)
+INPUT_BG = (35, 35, 40)
+INPUT_BORDER = (0, 255, 150)
+
+PRIORITY_COLORS = {4: (255, 50, 50), 3: (255, 165, 0), 2: (0, 200, 255), 1: (50, 255, 50)}
+
+class BriefingPopup:
+    def __init__(self, texto_inicial):
+        self.historico_formatado = []
+        self.input_usuario = ""
+        self.largura, self.altura = 800, 550
+        self.visivel = True
+        self.carregando = False
+        self.scroll_offset = 0
+        self.max_linhas_visiveis = 18
+
+        self.font_m = pygame.font.SysFont("arial", 16)
+        self.font_t = pygame.font.SysFont("arial", 20, bold=True)
+
+        self.adicionar_mensagem("IA", texto_inicial)
+
+    def adicionar_mensagem(self, autor, texto):
+        self.carregando = False
+        prefixo = "🤖 Assistente: " if autor == "IA" else "👤 Maitê: "
+        cor = COLOR_AI if autor == "IA" else COLOR_USER
+
+        palavras = (prefixo + texto).replace('\n', ' \n ').split(' ')
+        linha_atual = ""
+
+        for p in palavras:
+            if p == '\n':
+                self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+                linha_atual = ""
+                continue
+
+            test_line = linha_atual + p + " "
+
+            if self.font_m.size(test_line)[0] < (self.largura - 80):
+                linha_atual = test_line
+            else:
+                self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+                linha_atual = p + " "
+
+        self.historico_formatado.append({"texto": linha_atual, "cor": cor})
+        self.historico_formatado.append({"texto": "", "cor": BLACK})
+
+        self.scroll_offset = 0
+
+    def draw(self, screen):
+        if not self.visivel:
+            return
+
+        overlay = pygame.Surface((1400, 800), pygame.SRCALPHA)
+        pygame.draw.rect(overlay, (0, 0, 0, 220), (0, 0, 1400, 800))
+
+        x, y = (1000 - self.largura) // 2, (800 - self.altura) // 2
+        rect = pygame.Rect(x, y, self.largura, self.altura)
+
+        pygame.draw.rect(overlay, (25, 25, 30), rect, border_radius=15)
+        pygame.draw.rect(overlay, BLUE_NEON, rect, 2, border_radius=15)
+
+        overlay.blit(self.font_t.render("✨ Inteligência Logística - IA", True, GOLD), (x+30, y+20))
+
+        y_text = y + 70
+        start = max(0, len(self.historico_formatado) - self.max_linhas_visiveis - self.scroll_offset)
+        end = start + self.max_linhas_visiveis
+
+        for item in self.historico_formatado[start:end]:
+            if item["texto"]:
+                surf = self.font_m.render(item["texto"], True, item["cor"])
+                overlay.blit(surf, (x+30, y_text))
+            y_text += 22
+
+        if self.carregando:
+            loading = self.font_m.render("🤖 Pensando...", True, GOLD)
+            overlay.blit(loading, (x+30, y + self.altura - 90))
+
+        input_y = y + self.altura - 60
+
+        pygame.draw.rect(overlay, INPUT_BG, (x+20, input_y, self.largura-40, 40), border_radius=8)
+        pygame.draw.rect(overlay, INPUT_BORDER, (x+20, input_y, self.largura-40, 40), 1, border_radius=8)
+
+        cursor = "|" if int(time.time() * 2) % 2 == 0 else ""
+
+        texto_input = self.input_usuario if self.input_usuario else "Digite sua pergunta... (Enter para enviar)"
+        txt_input = self.font_m.render(f"{texto_input}{cursor}", True, (0, 255, 150))
+
+        overlay.blit(txt_input, (x+35, input_y + 10))
+
+        screen.blit(overlay, (0, 0))
+
+
+# ===== main.py (COMPLETO ATUALIZADO) =====
 # -*- coding: utf-8 -*-
 import sys, pygame, os
 from mapa_utils import *
@@ -7,7 +113,7 @@ from ai_advisor import *
 
 WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 800
 MAP_WIDTH, PANEL_WIDTH = 1000, 400
-FPS = 30 # Definido globalmente
+FPS = 30
 
 def main():
     pygame.init()
@@ -37,23 +143,44 @@ def main():
     while running:
         mouse_pos = pygame.mouse.get_pos()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT: running = False
+            if event.type == pygame.QUIT:
+                running = False
             
             if popup and popup.visivel:
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE: popup.visivel = False
+                    if event.key == pygame.K_ESCAPE:
+                        popup.visivel = False
+
                     elif event.key == pygame.K_RETURN:
                         if popup.input_usuario.strip():
                             msg = popup.input_usuario
                             popup.input_usuario = ""
                             popup.carregando = True
                             popup.draw(screen); pygame.display.flip()
+
                             res = enviar_mensagem_chat(msg)
+
                             popup.adicionar_mensagem("Gerreiro", msg)
                             popup.adicionar_mensagem("IA", res)
-                    elif event.key == pygame.K_BACKSPACE: popup.input_usuario = popup.input_usuario[:-1]
-                    else: popup.input_usuario += event.unicode
-                continue 
+
+                    elif event.key == pygame.K_BACKSPACE:
+                        popup.input_usuario = popup.input_usuario[:-1]
+
+                    elif event.key == pygame.K_UP:
+                        popup.scroll_offset = max(0, popup.scroll_offset - 3)
+
+                    elif event.key == pygame.K_DOWN:
+                        popup.scroll_offset += 3
+
+                    elif event.key == pygame.K_DELETE:
+                        popup.historico_formatado = []
+
+                    elif event.key == pygame.K_TAB:
+                        popup.input_usuario += "    "
+
+                    else:
+                        popup.input_usuario += event.unicode
+                continue
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 btn_rect = pygame.Rect(MAP_WIDTH + 50, 530, 300, 45)
@@ -62,33 +189,42 @@ def main():
                         briefing = gerar_briefing_vibrante(best_route)
                         inicializar_chat(best_route)
                         popup = BriefingPopup(briefing)
-                    else: popup.visivel = True
+                    else:
+                        popup.visivel = True
 
         if not is_optimal:
             generation += 1
             population, cur_best, cur_fit = evolve_population(population, 100, 0.25)
             if cur_fit < best_fitness:
                 best_fitness, best_route, stable_count = cur_fit, cur_best[:], 0
-            else: stable_count += 1
-            if stable_count > 500: is_optimal = True
+            else:
+                stable_count += 1
+            if stable_count > 500:
+                is_optimal = True
             fitness_history.append(best_fitness)
-            if len(fitness_history) > 150: fitness_history.pop(0)
+            if len(fitness_history) > 150:
+                fitness_history.pop(0)
 
         screen.fill(BLACK)
-        if map_surface: screen.blit(map_surface, (0, 0))
-        # Desenha a rota e, sobre ela, os pontos na ordem ótima (1, 2, 3...)
+        if map_surface:
+            screen.blit(map_surface, (0, 0))
+
         draw_route_lines(screen, best_route)
         draw_service_points(screen, best_route if best_route else service_points, pygame.font.SysFont("arial", 11))
+
         best_distance_km = calculate_total_distance_km(best_route) if best_route else 0.0
-        draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT, 
+
+        draw_side_panel(screen, MAP_WIDTH, PANEL_WIDTH, WINDOW_HEIGHT,
                         pygame.font.SysFont("arial", 18, True), pygame.font.SysFont("arial", 13),
                         best_route, generation, best_fitness, best_distance_km, fitness_history, 0, is_optimal)
-        
+
         draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
-        if popup and popup.visivel: popup.draw(screen)
+
+        if popup and popup.visivel:
+            popup.draw(screen)
 
         draw_convergence_graph(screen, MAP_WIDTH + 30, 600, PANEL_WIDTH - 60, 160, fitness_history)
-        
+
         pygame.display.flip()
         clock.tick(FPS)
 
