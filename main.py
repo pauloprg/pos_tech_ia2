@@ -186,7 +186,7 @@ def main():
                 btn_rect = pygame.Rect(MAP_WIDTH + 50, 530, 300, 45)
                 if btn_rect.collidepoint(mouse_pos) and is_optimal:
                     if not popup:
-                        briefing = gerar_briefing_vibrante(best_route)
+                        briefing = gerar_roteiro_inteligente(best_route)
                         inicializar_chat(best_route)
                         popup = BriefingPopup(briefing)
                     else:

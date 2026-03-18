@@ -11,28 +11,54 @@ if isinstance(API_KEY, str) and API_KEY.startswith("gsk_"):
 
 historico_conversa = []
 
-def gerar_briefing_vibrante(rota_final):
-    """Gera o texto inicial para o Popup com base nos dados reais da rota."""
+def gerar_roteiro_inteligente(rota_final):
     if not client:
         return "Configure sua API KEY da Groq para ativar a análise de rota."
 
-    # MONTAGEM DO ITINERÁRIO REAL PARA A IA
-    itinerario = [
-        f"{i+1}º: {p.codigo} | Atendimento: {p.tipo_atendimento} | Prioridade: {p.prioridade}" 
-        for i, p in enumerate(rota_final)
-    ]
-    corpo = "\n".join(itinerario)
-    
+    roteiro = []
+    for i, p in enumerate(rota_final):
+        roteiro.append(
+            f"""
+Parada {i+1}:
+- Código: {p.codigo}
+- Tipo: {p.tipo_atendimento}
+- Prioridade: {p.prioridade}
+- Tempo estimado atendimento: {p.tempo_atendimento}h
+- Janela: {p.tempo_inicio}h às {p.tempo_fim}h
+- Quantidade: {p.quantidade}
+- Refrigeração: {"Sim" if p.temperatura_controlada else "Não"}
+- Protocolo especial: {"Sim" if p.protocolo_especial else "Não"}
+"""
+        )
+
+    corpo = "\n".join(roteiro)
+
     prompt = f"""
-    Você é o coordenador de logística do programa Saúde da Mulher na Ceilândia. 
-    A enfermeira Maitê percorrerá esta rota otimizada:
-    
-    {corpo}
-    
-    Com base nos tipos de atendimento e prioridades acima, gere um briefing curto (máx 100 palavras).
-    Destaque os casos de Prioridade 4 (Críticos). Seja profissional e encorajador.
-    """
-    
+Você é um coordenador logístico especialista em operações de saúde pública.
+
+Transforme a lista de paradas abaixo em um roteiro operacional claro e prático para a equipe de campo.
+
+Regras:
+- Seja direto, objetivo e organizado
+- Use linguagem simples e profissional
+- Destaque atendimentos críticos (prioridade 4)
+- Estruture como um roteiro de execução
+
+Inclua obrigatoriamente:
+
+1. Sequência das visitas (passo a passo)
+2. Tipo de atendimento em cada parada
+3. Informações relevantes (tempo, cuidados, restrições)
+4. Alertas importantes (ex: prioridade alta, protocolo especial)
+5. Resumo final com:
+   - total de atendimentos
+   - quantos são críticos
+   - tempo estimado total
+
+DADOS DA ROTA:
+{corpo}
+"""
+
     try:
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
@@ -40,31 +66,74 @@ def gerar_briefing_vibrante(rota_final):
         )
         return completion.choices[0].message.content
     except Exception as e:
-        return f"Rota otimizada com sucesso! (Erro de conexão IA: {e})"
+        return f"Erro IA: {e}"
+    
 
 def inicializar_chat(rota_final):
-    """Contextualiza o chat com os dados reais de atendimento."""
     global historico_conversa
-    itinerario = [f"{p.codigo}: {p.tipo_atendimento}" for p in rota_final]
-    resumo = ", ".join(itinerario)
-    
-    historico_conversa = [{
-        "role": "system",
-        "content": f"Você é o assistente logístico. A rota da Maitê possui estes atendimentos: {resumo}. Responda dúvidas sobre a ordem e o tipo de serviço de cada ponto."
-    }]
+
+    dados = []
+    for i, p in enumerate(rota_final):
+        dados.append(
+            f"{i+1}: {p.codigo} | {p.tipo_atendimento} | prioridade {p.prioridade}"
+        )
+
+    resumo = "\n".join(dados)
+
+    historico_conversa = [
+        {
+            "role": "system",
+            "content": f"""
+Você é um assistente logístico inteligente.
+
+Você tem acesso à rota abaixo:
+
+{resumo}
+
+Você deve:
+- Responder perguntas em linguagem natural
+- Identificar prioridades
+- Saber qual é o próximo atendimento
+- Contar tipos de ocorrências
+- Sugerir decisões operacionais
+
+Exemplos de perguntas que você deve responder:
+- "Qual o próximo atendimento prioritário?"
+- "Quantas emergências temos hoje?"
+- "Qual parada exige mais atenção?"
+- "Qual o tempo total estimado?"
+
+Responda sempre de forma objetiva e útil para a equipe.
+"""
+        }
+    ]
 
 def enviar_mensagem_chat(mensagem_usuario):
     global historico_conversa
-    if not client: return "Erro: IA não configurada."
-    
-    historico_conversa.append({"role": "user", "content": mensagem_usuario})
+
+    if not client:
+        return "Erro: IA não configurada."
+
+    historico_conversa.append({
+        "role": "user",
+        "content": mensagem_usuario
+    })
+
     try:
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
-            messages=historico_conversa
+            messages=historico_conversa,
+            temperature=0.4  # mais consistente
         )
+
         resposta = completion.choices[0].message.content
-        historico_conversa.append({"role": "assistant", "content": resposta})
+
+        historico_conversa.append({
+            "role": "assistant",
+            "content": resposta
+        })
+
         return resposta
+
     except Exception as e:
         return f"Falha na resposta: {e}"
