@@ -26,11 +26,72 @@ class BriefingPopup:
         self.carregando = False
         self.scroll_offset = 0
         self.max_linhas_visiveis = 18
+        self._scroll_track_rect = None
+        self._scroll_thumb_rect = None
+        self._scroll_dragging = False
+        self._scroll_drag_mouse_y = 0
+        self._scroll_drag_start_offset = 0
 
         self.font_m = pygame.font.SysFont("arial", 16)
         self.font_t = pygame.font.SysFont("arial", 20, bold=True)
 
         self.adicionar_mensagem("IA", texto_inicial)
+
+    def _max_scroll(self):
+        return max(0, len(self.historico_formatado) - self.max_linhas_visiveis)
+
+    def clamp_scroll(self):
+        self.scroll_offset = max(0, min(self.scroll_offset, self._max_scroll()))
+
+    def scroll_lines(self, delta_lines):
+        # delta_lines > 0 = scroll up (ver mensagens antigas)
+        self.scroll_offset = max(0, min(self.scroll_offset + delta_lines, self._max_scroll()))
+
+    def on_mouse_down(self, pos):
+        if self._scroll_thumb_rect and self._scroll_thumb_rect.collidepoint(pos):
+            self._scroll_dragging = True
+            self._scroll_drag_mouse_y = pos[1]
+            self._scroll_drag_start_offset = self.scroll_offset
+            return True
+
+        if self._scroll_track_rect and self._scroll_track_rect.collidepoint(pos):
+            if not self._scroll_thumb_rect:
+                return False
+            if pos[1] < self._scroll_thumb_rect.top:
+                self.scroll_lines(6)  # page up
+            elif pos[1] > self._scroll_thumb_rect.bottom:
+                self.scroll_lines(-6)  # page down
+            return True
+
+        return False
+
+    def on_mouse_up(self):
+        self._scroll_dragging = False
+
+    def on_mouse_motion(self, pos):
+        if not self._scroll_dragging:
+            return False
+        if not (self._scroll_track_rect and self._scroll_thumb_rect):
+            return False
+
+        max_scroll = self._max_scroll()
+        if max_scroll <= 0:
+            return True
+
+        track_y = self._scroll_track_rect.y
+        track_h = self._scroll_track_rect.height
+        thumb_h = self._scroll_thumb_rect.height
+        usable_h = max(1, track_h - thumb_h)
+
+        # Determine new thumb top from mouse delta, clamp, then map back to scroll_offset.
+        delta_y = pos[1] - self._scroll_drag_mouse_y
+        start_fraction = (max_scroll - self._scroll_drag_start_offset) / max_scroll  # 0=top, 1=bottom
+        start_thumb_top = track_y + int(usable_h * start_fraction)
+        new_thumb_top = max(track_y, min(track_y + usable_h, start_thumb_top + delta_y))
+        new_fraction = (new_thumb_top - track_y) / usable_h  # 0=top, 1=bottom
+        self.scroll_offset = int(round(max_scroll * (1 - new_fraction)))
+        self.clamp_scroll()
+        return True
 
     def adicionar_mensagem(self, autor, texto):
         self.carregando = False
@@ -58,6 +119,7 @@ class BriefingPopup:
         self.historico_formatado.append({"texto": "", "cor": BLACK})
 
         self.scroll_offset = 0
+        self.clamp_scroll()
 
     def draw(self, screen):
         if not self.visivel:
@@ -74,7 +136,12 @@ class BriefingPopup:
 
         overlay.blit(self.font_t.render("✨ Inteligência Logística - IA", True, GOLD), (x+30, y+20))
 
-        y_text = y + 70
+        self.clamp_scroll()
+        message_top = y + 70
+        message_bottom = y + self.altura - 80
+        message_h = max(1, message_bottom - message_top)
+        y_text = message_top
+
         start = max(0, len(self.historico_formatado) - self.max_linhas_visiveis - self.scroll_offset)
         end = start + self.max_linhas_visiveis
 
@@ -83,6 +150,30 @@ class BriefingPopup:
                 surf = self.font_m.render(item["texto"], True, item["cor"])
                 overlay.blit(surf, (x+30, y_text))
             y_text += 22
+
+        # Scrollbar
+        total = len(self.historico_formatado)
+        max_scroll = self._max_scroll()
+        track_w = 10
+        track_x = x + self.largura - 18
+        track_y = message_top
+        track_h = message_h
+        track = pygame.Rect(track_x, track_y, track_w, track_h)
+        self._scroll_track_rect = track
+
+        if total <= self.max_linhas_visiveis:
+            thumb = pygame.Rect(track_x, track_y, track_w, track_h)
+        else:
+            thumb_h = int(max(24, track_h * (self.max_linhas_visiveis / max(1, total))))
+            thumb_h = min(track_h, thumb_h)
+            usable_h = max(1, track_h - thumb_h)
+            fraction = (max_scroll - self.scroll_offset) / max_scroll  # 0=top, 1=bottom
+            thumb_y = track_y + int(usable_h * fraction)
+            thumb = pygame.Rect(track_x, thumb_y, track_w, thumb_h)
+        self._scroll_thumb_rect = thumb
+
+        pygame.draw.rect(overlay, (55, 55, 65), track, border_radius=5)
+        pygame.draw.rect(overlay, (0, 255, 150) if self._scroll_dragging else (120, 120, 130), thumb, border_radius=5)
 
         if self.carregando:
             loading = self.font_m.render("🤖 Pensando...", True, GOLD)
@@ -147,6 +238,32 @@ def main():
                 running = False
             
             if popup and popup.visivel:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Mouse wheel (pygame 1) and drag/click on scrollbar
+                    if event.button == 4:
+                        popup.scroll_lines(3)
+                        continue
+                    if event.button == 5:
+                        popup.scroll_lines(-3)
+                        continue
+                    if event.button == 1:
+                        if popup.on_mouse_down(mouse_pos):
+                            continue
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    if event.button == 1:
+                        popup.on_mouse_up()
+
+                if event.type == pygame.MOUSEMOTION:
+                    if popup.on_mouse_motion(mouse_pos):
+                        continue
+
+                if event.type == pygame.MOUSEWHEEL:
+                    # pygame 2 (trackpad / wheel)
+                    if event.y != 0:
+                        popup.scroll_lines(3 if event.y > 0 else -3)
+                        continue
+
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         popup.visivel = False
@@ -167,13 +284,14 @@ def main():
                         popup.input_usuario = popup.input_usuario[:-1]
 
                     elif event.key == pygame.K_UP:
-                        popup.scroll_offset = max(0, popup.scroll_offset - 3)
+                        popup.scroll_lines(3)
 
                     elif event.key == pygame.K_DOWN:
-                        popup.scroll_offset += 3
+                        popup.scroll_lines(-3)
 
                     elif event.key == pygame.K_DELETE:
                         popup.historico_formatado = []
+                        popup.scroll_offset = 0
 
                     elif event.key == pygame.K_TAB:
                         popup.input_usuario += "    "
