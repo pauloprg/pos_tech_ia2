@@ -331,6 +331,17 @@ def draw_service_points(screen, points, font):
         screen.blit(code_surf, (p.x + 12, p.y - 8))
 
 
+def _truncate_text(text, font, max_width):
+    if font.size(text)[0] <= max_width:
+        return text
+
+    ellipsis = "..."
+    while text and font.size(text + ellipsis)[0] > max_width:
+        text = text[:-1]
+
+    return text + ellipsis
+
+
 def draw_side_panel(
     screen,
     px=None,
@@ -374,24 +385,93 @@ def draw_side_panel(
     pygame.draw.rect(screen, (30, 30, 30), (px, 0, pw, vh))
     pygame.draw.line(screen, BLUE_NEON, (px, 0), (px, vh), 2)
 
-    margin = px + 20
+    margin_x = px + 16
+    top_y = 25
+
+    title_font = pygame.font.SysFont("arial", 17, bold=True)
+    small_font = pygame.font.SysFont("arial", 13)
+    section_font = pygame.font.SysFont("arial", 13, bold=True)
+
     txt_gen = "ROTA OTIMIZADA!" if opt else f"GERAÇÃO: {gen}"
-    screen.blit(f1.render(txt_gen, True, GOLD if opt else BLUE_NEON), (margin, 25))
-    screen.blit(f2.render(f"Distância Total: {round(dist_km, 2)} km", True, WHITE), (margin, 55))
-    screen.blit(f2.render(f"Custo (fitness): {round(fit, 2)}", True, GRAY_LIGHT), (margin, 72))
+    # HEADER
+    screen.blit(title_font.render(txt_gen, True, GOLD), (margin_x, top_y))
 
-    pygame.draw.line(screen, (70, 70, 70), (px + 10, 85), (px + pw - 10, 85), 1)
+    dist_y = top_y + 32
+    cost_y = top_y + 50
 
-    y_s = 100 - scroll
+    screen.blit(small_font.render(f"Distância Total: {round(dist_km, 2)} km", True, WHITE), (margin_x, dist_y))
+    screen.blit(small_font.render(f"Custo (fitness): {round(fit, 2)}", True, GRAY_LIGHT), (margin_x, cost_y))
 
-    for i, p in enumerate(route):
-        if 80 < y_s < vh - 20:
-            info_texto = f"{i + 1}. {p.codigo} | {p.tipo_atendimento} | {p.tempo_atendimento}h"
-            cor = PRIORITY_COLORS.get(p.prioridade, WHITE)
-            txt_surface = f2.render(info_texto, True, cor)
-            screen.blit(txt_surface, (margin, y_s))
+    # LINHA AGORA POSICIONADA CORRETAMENTE
+    line_y = cost_y + 18
 
-        y_s += 28
+    pygame.draw.line(
+        screen,
+        (70, 70, 70),
+        (px + 10, line_y),
+        (px + pw - 10, line_y),
+        1
+    )
+
+    # TÍTULO ATENDIMENTOS
+    screen.blit(section_font.render("ATENDIMENTOS", True, WHITE), (margin_x, line_y + 14))
+
+    # Área reservada para a lista
+    list_top = 122
+    list_bottom = vh - 255   # reserva real para botão + gráfico
+    list_height = list_bottom - list_top
+
+    line_height = 30
+    max_rows_per_col = max(1, list_height // line_height)
+
+    # Força 2 colunas fixas
+    col_gap = 14
+    usable_width = pw - 32
+    col_width = (usable_width - col_gap) // 2
+
+    left_x = margin_x
+    right_x = margin_x + col_width + col_gap
+
+    # Fundo visual da área da lista
+    list_rect = pygame.Rect(margin_x - 2, list_top - 2, usable_width + 4, list_height + 4)
+    pygame.draw.rect(screen, (30, 30, 30), list_rect)
+
+    for idx, p in enumerate(route):
+        if idx < max_rows_per_col:
+            col_x = left_x
+            row = idx
+        else:
+            col_x = right_x
+            row = idx - max_rows_per_col
+
+        # Se passar da segunda coluna, interrompe
+        if row >= max_rows_per_col:
+            break
+
+        y = list_top + row * line_height
+
+        # Texto mais curto para caber
+        tipo_map = {
+            "Emergência obstétrica": "Emergência obst.",
+            "Violência doméstica": "Violência dom.",
+            "Medicamento hormonal": "Med. hormonal",
+            "Pós-parto": "Pós-parto",
+        }
+        tipo_curto = tipo_map.get(p.tipo_atendimento, p.tipo_atendimento)
+
+        info_texto = f"{idx+1}. {p.codigo[:14]} | {tipo_curto} | {p.tempo_atendimento}h"
+        info_texto = _truncate_text(info_texto, small_font, col_width - 6)
+
+        cor = PRIORITY_COLORS.get(p.prioridade, WHITE)
+        txt_surface = small_font.render(info_texto, True, cor)
+        screen.blit(txt_surface, (col_x, y))
+
+    # Se ainda houver excesso
+    capacidade_total = max_rows_per_col * 2
+    if len(route) > capacidade_total:
+        restantes = len(route) - capacidade_total
+        aviso = small_font.render(f"... e mais {restantes} atendimentos", True, GRAY_LIGHT)
+        screen.blit(aviso, (margin_x, list_bottom - 18))
 
 
 def draw_convergence_graph(screen, x, y, w, h, history):

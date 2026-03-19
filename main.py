@@ -23,9 +23,10 @@ from renderer import (
 )
 from vrp_genetic import evolve_population, generate_random_population
 
-WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 800
-MAP_WIDTH, PANEL_WIDTH = 1000, 400
-FPS = 15
+WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 750
+MAP_WIDTH = 850
+PANEL_WIDTH = 550
+FPS = 25
 
 
 def draw_vehicle_routes(screen, depot, routes):
@@ -119,7 +120,8 @@ def main():
                             popup.input_usuario += event.unicode
 
             if event.type == pygame.MOUSEBUTTONDOWN:
-                btn_rect = pygame.Rect(MAP_WIDTH + 50, 530, 300, 45)
+                btn_rect = pygame.Rect(BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H)
+
                 if btn_rect.collidepoint(mouse_pos) and is_optimal and best_solution:
                     resumo_llm = []
                     for route in best_solution.routes:
@@ -196,10 +198,20 @@ def main():
                 is_optimal,
             )
 
-        draw_chat_button(screen, MAP_WIDTH + 50, 530, 300, 45, is_optimal)
+        BUTTON_X = MAP_WIDTH + 40
+        BUTTON_Y = WINDOW_HEIGHT - 265
+        BUTTON_W = PANEL_WIDTH - 80
+        BUTTON_H = 44
+
+        btn_rect = draw_chat_button(screen, BUTTON_X, BUTTON_Y, BUTTON_W, BUTTON_H, is_optimal)
+
+        GRAPH_X = MAP_WIDTH + 28
+        GRAPH_Y = WINDOW_HEIGHT - 190
+        GRAPH_W = PANEL_WIDTH - 80
+        GRAPH_H = 140
 
         if not (popup and popup.visivel):
-            draw_convergence_graph(screen, MAP_WIDTH + 30, 600, PANEL_WIDTH - 60, 160, fitness_history)
+            draw_convergence_graph(screen, GRAPH_X, GRAPH_Y, GRAPH_W, GRAPH_H, fitness_history)
 
         if popup and popup.visivel:
             popup.draw(screen)
