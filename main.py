@@ -62,7 +62,7 @@ def main():
     clock = pygame.time.Clock()
 
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    json_path = os.path.join(base_dir, "assets", "dataset_ceilandia_osm.jsonl")
+    json_path = os.path.join(base_dir, "assets", "dados.jsonl")
 
     coords_data = load_coordinates_from_jsonl(json_path)
     service_points = generate_service_points(coords_data, 18, MAP_WIDTH, WINDOW_HEIGHT)
