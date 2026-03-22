@@ -1,207 +1,101 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Mar 12 23:56:09 2026
-
-@author: paulo
-"""
-
-import random
 import math
-from typing import List
-from pontos import ServicePoint
+import random
 
-
-CAPACIDADE = 25
-HORARIO_INICIO = 8
-FATOR_TEMPO = 0.03
-PENALIDADE_TEMPERATURA = 180
-ESPERA_PROT_ESPECIAL = 1.5
-
-
-def haversine_distance(p1: ServicePoint, p2: ServicePoint) -> float:
-    # Raio da Terra em km
-    R = 6371.0
-    lat1_rad = math.radians(p1.lat)
-    lon1_rad = math.radians(p1.lon)
-    lat2_rad = math.radians(p2.lat)
-    lon2_rad = math.radians(p2.lon)
+def haversine_distance(p1, p2):
+    """Calcula a distância real entre dois pontos em KM."""
+    R = 6371.0  # Raio da Terra em km
+    lat1, lon1 = math.radians(p1.lat), math.radians(p1.lon)
+    lat2, lon2 = math.radians(p2.lat), math.radians(p2.lon)
     
-    dlat = lat2_rad - lat1_rad
-    dlon = lon2_rad - lon1_rad
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
     
-    a = math.sin(dlat / 2)**2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(dlon / 2)**2
+    a = math.sin(dlat / 2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2)**2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
     return R * c
 
-
-def euclidean_distance(p1: ServicePoint, p2: ServicePoint) -> float:
-    return math.sqrt((p1.lat - p2.lat) ** 2 + (p1.lon - p2.lon) ** 2)
-
-
-def route_distance(route: List[ServicePoint]) -> float:
-    if len(route) < 2:
+def calculate_total_distance_km(route):
+    """Somatória da distância geográfica (KM) entre pontos consecutivos."""
+    if not route or len(route) < 2:
         return 0.0
-
-    total = 0.0
+    total_km = 0.0
     for i in range(len(route) - 1):
-        total += haversine_distance(route[i], route[i + 1])
-    return total
+        total_km += haversine_distance(route[i], route[i + 1])
+    return total_km
 
-
-def priority_penalty(point: ServicePoint, current_time: float) -> float:
-    if current_time <= point.tempo_fim:
+def calculate_priority_penalty(route):
+    """Penalidade clínica por atrasar prioridades altas (mesma unidade do fitness)."""
+    if not route:
         return 0.0
+    penalty = 0.0
+    for i, p in enumerate(route):
+        peso_prioridade = p.prioridade  # 1..4
+        penalty += (i * (peso_prioridade ** 2)) * 10
+    return penalty
 
-    delay = current_time - point.tempo_fim
-
-    if point.prioridade == 4:
-        base_penalty = delay * 300
-    elif point.prioridade == 3:
-        base_penalty = delay * 180
-    elif point.prioridade == 2:
-        base_penalty = delay * 100
-    else:
-        base_penalty = delay * 60
-
-    if point.protocolo_especial:
-        base_penalty *= ESPERA_PROT_ESPECIAL
-
-    return base_penalty
-
-
-def time_window_penalty(point: ServicePoint, current_time: float) -> float:
+def calculate_fitness(route):
     """
-    Penaliza atendimento fora da janela de tempo.
-    Se chegar antes, pode esperar.
-    Se chegar depois, penaliza.
+    Calcula o custo da rota. 
+    Quanto MENOR o valor, MELHOR a rota.
     """
-    if current_time < point.tempo_inicio:
-        return 0.0
+    total_km = calculate_total_distance_km(route)
+    penalty = calculate_priority_penalty(route)
+    # Fitness final = distância física + penalidades clínicas
+    return total_km + penalty
 
-    if current_time > point.tempo_fim:
-        return (current_time - point.tempo_fim) * 120
-
-    return 0.0
-
-
-def capacity_penalty(route: List[ServicePoint]) -> float:
-    total_demand = sum(point.quantidade for point in route)
-
-    if total_demand <= CAPACIDADE:
-        return 0.0
-
-    excess = total_demand - CAPACIDADE
-    return excess * 250
-
-
-def refrigeration_penalty(point: ServicePoint, travel_segment_time: float) -> float:
-    if not point.temperatura_controlada:
-        return 0.0
-
-    if travel_segment_time <= 2.5:
-        return 0.0
-
-    return (travel_segment_time - 2.5) * PENALIDADE_TEMPERATURA
-
-
-def calculate_fitness(route: List[ServicePoint]) -> float:
-    """Calcula a distância real em KM usando Haversine."""
-    if not route: return float("inf")
-
-    total_cost = 0.0
-    # 1. Distância Geográfica Real
-    for i in range(len(route) - 1):
-        # USAR HAVERSINE PARA KM, NÃO EUCLIDEANA PARA PIXELS
-        total_cost += haversine_distance(route[i], route[i + 1])
-
-    # 2. Penalidade de Prioridade (Opcional: aumenta o 'custo' se prioridade 4 demorar)
-    # Para o seu gráfico ficar limpo, você pode focar apenas na distância KM primeiro.
-    
-    return total_cost
-
-
-def generate_random_population(points: List[ServicePoint], population_size: int) -> List[List[ServicePoint]]:
+def generate_random_population(points, size):
     population = []
-
-    for _ in range(population_size):
-        individual = points[:]
-        random.shuffle(individual)
-        population.append(individual)
-
+    for _ in range(size):
+        ind = points[:]
+        random.shuffle(ind)
+        population.append(ind)
     return population
 
+def sort_population(population):
+    # Retorna a população ordenada pelo fitness (do menor para o maior)
+    fitness_values = [(ind, calculate_fitness(ind)) for ind in population]
+    fitness_values.sort(key=lambda x: x[1])
+    return [x[0] for x in fitness_values], [x[1] for x in fitness_values]
 
-def sort_population(population: List[List[ServicePoint]]) -> tuple[List[List[ServicePoint]], List[float]]:
-    fitness_values = [calculate_fitness(individual) for individual in population]
+def evolve_population(population, pop_size, mutation_rate):
+    # 1. Ordena e seleciona os melhores (Elitismo)
+    population, fitness_values = sort_population(population)
+    next_gen = population[:pop_size // 5] # Mantém 20% melhores
+    
+    # 2. Crossover e Mutação
+    while len(next_gen) < pop_size:
+        parent1 = random.choice(population[:pop_size // 2])
+        parent2 = random.choice(population[:pop_size // 2])
+        
+        # Crossover simples (Ordered Crossover)
+        child = crossover(parent1, parent2)
+        
+        # Mutação
+        if random.random() < mutation_rate:
+            mutate(child)
+            
+        next_gen.append(child)
+        
+    best_route = population[0]
+    best_fit = fitness_values[0]
+    return next_gen, best_route, best_fit
 
-    combined = list(zip(population, fitness_values))
-    combined.sort(key=lambda item: item[1])
-
-    sorted_population = [item[0] for item in combined]
-    sorted_fitness = [item[1] for item in combined]
-
-    return sorted_population, sorted_fitness
-
-
-def selection_by_tournament(population: List[List[ServicePoint]], tournament_size: int = 4) -> List[ServicePoint]:
-    competitors = random.sample(population, tournament_size)
-    competitors.sort(key=calculate_fitness)
-    return competitors[0][:]
-
-
-def order_crossover(parent1: List[ServicePoint], parent2: List[ServicePoint]) -> List[ServicePoint]:
-    size = len(parent1)
-    start, end = sorted(random.sample(range(size), 2))
-
+def crossover(p1, p2):
+    size = len(p1)
+    a, b = sorted(random.sample(range(size), 2))
     child = [None] * size
-    child[start:end + 1] = parent1[start:end + 1]
-
-    parent2_filtered = [point for point in parent2 if point not in child]
-
+    child[a:b] = p1[a:b]
+    
+    p2_remaining = [item for item in p2 if item not in child]
     idx = 0
     for i in range(size):
         if child[i] is None:
-            child[i] = parent2_filtered[idx]
+            child[i] = p2_remaining[idx]
             idx += 1
-
     return child
 
-
-def mutate(route: List[ServicePoint], mutation_probability: float) -> List[ServicePoint]:
-    mutated = route[:]
-
-    if random.random() < mutation_probability:
-        i, j = sorted(random.sample(range(len(mutated)), 2))
-        mutated[i], mutated[j] = mutated[j], mutated[i]
-
-    if random.random() < mutation_probability * 0.5:
-        i, j = sorted(random.sample(range(len(mutated)), 2))
-        mutated[i:j + 1] = reversed(mutated[i:j + 1])
-
-    return mutated
-
-
-def evolve_population(
-    population: List[List[ServicePoint]],
-    population_size: int,
-    mutation_probability: float,
-    elite_size: int = 1
-) -> tuple[List[List[ServicePoint]], List[ServicePoint], float]:
-    population, fitness_values = sort_population(population)
-
-    new_population = [individual[:] for individual in population[:elite_size]]
-
-    while len(new_population) < population_size:
-        parent1 = selection_by_tournament(population)
-        parent2 = selection_by_tournament(population)
-
-        child = order_crossover(parent1, parent2)
-        child = mutate(child, mutation_probability)
-
-        new_population.append(child)
-
-    best_individual = population[0][:]
-    best_fitness = fitness_values[0]
-
-    return new_population, best_individual, best_fitness
+def mutate(route):
+    # Troca dois pontos de lugar (Swap Mutation)
+    a, b = random.sample(range(len(route)), 2)
+    route[a], route[b] = route[b], route[a]
