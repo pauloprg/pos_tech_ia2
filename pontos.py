@@ -8,6 +8,8 @@ from typing import Tuple, Set
 @dataclass(frozen=True)
 class ServicePoint:
     id: int
+    lat: float
+    lon: float
     x: int
     y: int
     lat: float

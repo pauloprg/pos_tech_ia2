@@ -54,6 +54,10 @@ def flatten_best_points(routes):
         result.extend(route.points)
     return result
 
+# CONSTANTES GLOBAIS - GARANTA QUE ESTEJAM AQUI
+WINDOW_WIDTH, WINDOW_HEIGHT = 1400, 800
+MAP_WIDTH, PANEL_WIDTH = 1000, 400
+FPS = 30 
 
 def main():
     pygame.init()
@@ -93,7 +97,7 @@ def main():
         mouse_pos = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT: 
                 running = False
 
             if popup and popup.visivel:
@@ -217,11 +221,10 @@ def main():
             popup.draw(screen)
 
         pygame.display.flip()
-        clock.tick(FPS)
+        clock.tick(FPS) # <--- O erro estava aqui
 
     pygame.quit()
     sys.exit()
-
 
 if __name__ == "__main__":
     main()
