@@ -176,7 +176,6 @@ O sistema utiliza **Groq (LLaMA 3)** para:
 ```bash
 git clone https://github.com/pauloprg/pos_tech_ia2.git
 cd pos_tech_ia2
-git checkout mapa_octaviano
 ```
 
 ---
@@ -184,7 +183,7 @@ git checkout mapa_octaviano
 ### 2. Instale dependências
 
 ```bash
-pip install pygame numpy groq
+pip install -r requirements.txt
 ```
 
 ---
