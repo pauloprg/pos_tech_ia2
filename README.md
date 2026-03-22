@@ -1,292 +1,246 @@
-# Sistema de Otimização de Rotas para Atendimento Especializado à Saúde da Mulher
+# 🚑 VRP para Saúde da Mulher com Algoritmos Genéticos + IA
 
-## Descrição do Projeto
-
-Este projeto implementa um sistema de simulação para **otimização de rotas de atendimento especializado voltados à saúde da mulher no Distrito Federal**.
-
-O sistema utiliza como base o **Problema do Caixeiro Viajante (TSP - Traveling Salesman Problem)** e posteriormente evolui para um **Problema de Roteirização de Veículos (VRP)** com restrições específicas do contexto do Tech Challenge.
-
-A aplicação simula atendimentos especializados em diferentes pontos do território do Distrito Federal utilizando um **mapa real como base visual**.
-
-Os pontos de atendimento são gerados aleatoriamente dentro do mapa e representam situações como:
-
-- Emergências obstétricas
-- Casos de violência doméstica
-- Entrega de medicamentos hormonais
-- Atendimento pós-parto
-
-O sistema também apresenta visualmente a **rota de atendimento em tempo real**, juntamente com uma lista detalhada das prioridades.
+Este projeto implementa uma solução avançada de **roteirização de veículos (VRP - Vehicle Routing Problem)** aplicada ao contexto de **saúde da mulher**, utilizando **Algoritmos Genéticos** e integração com **Modelos de Linguagem (LLMs)** para apoio operacional.
 
 ---
 
-# Objetivo
+## 🎯 Objetivo
 
-Desenvolver um sistema que permita **simular e otimizar rotas de atendimento especializado à mulher**, considerando fatores como:
+O sistema simula a distribuição de atendimentos domiciliares e medicamentos especializados, considerando:
 
-- prioridade de atendimento
-- tipo de serviço
-- janelas de horário
-- demanda de suprimentos
+- Emergências obstétricas  
+- Casos de violência doméstica  
+- Medicamentos hormonais (cadeia fria)  
+- Atendimento pós-parto  
 
-O objetivo é demonstrar como **algoritmos de otimização podem apoiar sistemas de saúde pública**.
-
----
-
-# Tecnologias Utilizadas
-
-| Tecnologia | Função |
-|--------|--------|
-| Python 3.11 | Linguagem principal |
-| Pygame | Interface gráfica desktop e visualização do mapa |
-| Folium | Mapas interativos web com Leaflet |
-| Algoritmos Genéticos | Otimização das rotas |
-| NumPy | Manipulação de dados numéricos |
-| Haversine | Cálculo de distâncias geográficas reais |
-| Streamlit | Aplicação web para visualização em tempo real (opcional) |
+A solução busca **otimizar rotas respeitando restrições reais**, priorizando **eficiência logística e criticidade clínica**.
 
 ---
 
-# Estrutura do Projeto
+## 🧠 Principais Tecnologias
+
+- 🧬 Algoritmos Genéticos (customizados para VRP)
+- 🗺️ Pygame (visualização interativa)
+- 🤖 LLM (Groq / LLaMA 3) para análise de rotas
+- 🐍 Python 3.11+
+
+---
+
+## 🏗️ Arquitetura do Projeto
+
 pos_tech_ia2/
 │
-├── assets/
-│ └── Mapa_DF.png
-│
-├── main.py
-├── mapa_utils.py
-├── pontos.py
-├── renderer.py
-│
-├── requirements.txt
-└── README.md
-
-
-### Descrição dos arquivos
-
-**main.py**
-
-Arquivo principal do sistema.  
-Responsável por:
-
-- inicializar o Pygame
-- carregar o mapa
-- gerar pontos de atendimento
-- executar o loop principal da aplicação
+├── main.py                 # Execução principal + UI
+├── vrp_genetic.py          # Algoritmo Genético (núcleo)
+├── pontos.py               # Modelagem (ServicePoint, Vehicle, Depot)
+├── mapa_utils.py           # Geração de dados e frota
+├── renderer.py             # Interface gráfica
+├── ai_advisor.py           # Integração com LLM
+└── dataset/                # Dados sintéticos (coordenadas)
 
 ---
 
-**pontos.py**
+## ⚙️ Modelagem do Problema
 
-Define as estruturas de dados utilizadas no sistema.
+### 📍 Pontos de Atendimento (`ServicePoint`)
 
-Contém a classe principal:
-ServicePoint
+Cada ponto contém:
 
-Essa classe representa um ponto de atendimento com atributos como:
-
-- posição no mapa
-- tipo de atendimento
-- prioridade
-- demanda
-- janela de horário
-
----
-
-**mapa_utils.py**
-
-Responsável pela lógica relacionada ao mapa.
-
-Funções principais:
-
-- carregar e redimensionar o mapa
-- identificar áreas válidas para criação de pontos
-- gerar pontos de atendimento aleatórios
-- definir janelas de atendimento
+- Tipo de atendimento
+- Prioridade (1 a 4)
+- Quantidade de carga
+- Janela de tempo
+- Necessidade de refrigeração
+- Protocolo especial
+- Tipos de veículos permitidos
 
 ---
 
-**renderer.py**
+### 🚚 Veículos (`Vehicle`)
 
-Responsável pela renderização gráfica.
+Cada veículo possui:
 
-Funções principais:
-
-- desenhar o mapa
-- desenhar os pontos de atendimento
-- desenhar as rotas
-- renderizar o painel lateral com a lista de atendimentos
-
----
-
-**assets/Mapa_DF.png**
-
-Imagem base do mapa do Distrito Federal utilizada para posicionamento dos pontos.
+- Velocidade (km/h)
+- Custo por km
+- Capacidade de carga
+- Número máximo de paradas
+- Distância máxima
+- Tipos de atendimento suportados
+- Suporte a refrigeração
+- Suporte a protocolos especiais
 
 ---
 
-# Funcionamento do Sistema
+### 🧩 Frota Heterogênea
 
-## 1. Carregamento do mapa
+Exemplos:
 
-O sistema carrega o mapa do Distrito Federal e o ajusta ao tamanho da janela da aplicação.
-map_surface = load_and_scale_map()
-
----
-
-## 2. Identificação de áreas válidas
-
-O algoritmo percorre todos os pixels do mapa para identificar posições válidas onde um ponto pode ser criado.
-
-Pixels considerados inválidos:
-
-- áreas pretas (fora do mapa)
-- regiões de água (lagos e rios)
+- 🏍️ Moto → rápida, baixa capacidade  
+- 🚐 Van refrigerada → alta capacidade, cadeia fria  
+- 🚑 Ambulância → foco em emergências  
+- 🚁 Drone → baixo custo, carga limitada  
 
 ---
 
-## 3. Geração de pontos de atendimento
+## 🧬 Algoritmo Genético
 
-Os pontos são gerados aleatoriamente dentro das áreas válidas do mapa.
+### 🧬 Codificação
 
-Cada ponto recebe os atributos relevantes:
-
-- tipo de atendimento
-- prioridade
-- demanda de suprimentos
-- janela de horário
-
-Exemplo de ponto gerado:
-Ponto 3
-Tipo: Emergência obstétrica
-Prioridade: 4
-Janela de atendimento: 0h - 23h
+- Cada indivíduo é uma **sequência de pontos**
+- Representa uma **ordem global de atendimento**
 
 ---
 
-## 4. Definição da rota inicial
+### 🔄 Decodificação (VRP)
 
-A primeira rota é gerada utilizando ordenação baseada em prioridade:
+A sequência é convertida em múltiplas rotas:
 
-1. maior prioridade primeiro
-2. menor horário de atendimento
-3. identificador do ponto
-
----
-
-## 5. Visualização gráfica
-
-O sistema apresenta:
-
-- mapa do Distrito Federal
-- pontos de atendimento coloridos por prioridade
-- linhas conectando os pontos da rota
-- painel lateral com a sequência de atendimento
+- Distribuição entre veículos
+- Validação de restrições
+- Tentativa de alocação inteligente
 
 ---
 
-# Legenda de Prioridades
+### 🎯 Função de Fitness
 
-| Prioridade | Tipo de Atendimento | Cor |
-|------|------|------|
-| 4 | Emergência obstétrica | Vermelho |
-| 3 | Violência doméstica | Laranja |
-| 2 | Medicamento hormonal | Azul |
-| 1 | Pós-parto | Verde |
+Minimiza:
 
----
+- Distância total
+- Custo operacional
 
-# Interface do Sistema
+Penaliza:
 
-A interface é dividida em duas áreas:
-
-### Área esquerda
-
-Mapa do Distrito Federal com:
-
-- pontos de atendimento
-- rota visual
-
-### Área direita
-
-Painel com:
-
-- legenda de prioridades
-- lista da rota de atendimento
-- informações do tipo de atendimento
+- Atendimento não realizado  
+- Incompatibilidade veículo-atendimento  
+- Excesso de carga  
+- Excesso de distância  
+- Excesso de paradas  
+- Violação de janela de tempo  
+- Falha em cadeia fria  
+- Falha em protocolo especial  
 
 ---
 
-# Como Executar o Projeto
+### 🔁 Operadores Genéticos
 
-## 1. Clonar ou baixar o projeto
-git clone <repositorio>
+- Seleção por torneio  
+- Crossover por ordem (Order Crossover)  
+- Mutação:
+  - troca
+  - inversão
+  - inserção  
+
+---
+
+## 📊 Interface do Sistema
+
+A aplicação apresenta:
+
+- 🗺️ Mapa com rotas desenhadas
+- 📋 Lista de atendimentos ordenados
+- 📉 Gráfico de evolução do fitness
+- 🤖 Chat com IA para análise da solução
+
+---
+
+## 🤖 Integração com IA (LLM)
+
+O sistema utiliza **Groq (LLaMA 3)** para:
+
+- Gerar briefing operacional
+- Responder perguntas sobre a rota
+- Destacar riscos e prioridades
+- Apoiar tomada de decisão
+
+### Exemplo de perguntas:
+
+- "Qual o atendimento mais crítico?"
+- "Quantas emergências existem?"
+- "Qual rota exige mais atenção?"
+
+---
+
+## ⚖️ Impacto Social e Ética
+
+- Uso de **dados sintéticos** (sem exposição real)
+- Priorização de atendimentos críticos
+- Consideração de contextos sensíveis (violência, pós-parto)
+- IA usada como **suporte à decisão**, não substituição
+
+---
+
+## 🚀 Como Executar
+
+### 1. Clone o repositório
+
+```bash
+git clone https://github.com/pauloprg/pos_tech_ia2.git
 cd pos_tech_ia2
+git checkout mapa_octaviano
+```
 
 ---
 
-## 2. Instalar dependências
-Use Python 3.11 (recomendado para compatibilidade com Pygame).
+### 2. Instale dependências
 
-pip install -r requirements.txt
-
-Ou manualmente: pip install pygame matplotlib folium streamlit streamlit-folium haversine
-
----
-
-## 3. Executar o sistema (Modo Real-Time: Pygame + Folium com imagem dinâmica)
-"C:\Users\Perfil\AppData\Local\Programs\Python\Python311\python.exe" main.py
-
-**OU** (se py launcher estiver configurado):
-py -3.11 main.py
-
-Isso executa a otimização em tempo real com:
-- Janela desktop Pygame mostrando mapa renderizado do Folium (imagem atualizada dinamicamente)
-- Rota otimizada em tempo real sobreposta na imagem do mapa
-- Painel lateral com detalhes da evolução
-- Mapa web Folium interativo que se atualiza automaticamente a cada 10 gerações
-- Algoritmo genético evoluindo continuamente até convergência
-
-**Nota**: O Pygame agora usa uma imagem PNG gerada dinamicamente do mapa Folium, não a imagem estática anterior.
+```bash
+pip install pygame numpy groq
+```
 
 ---
 
-## 4. Outros modos de execução
+### 3. Configure a API da Groq
 
-### Mapa Folium Estático
-python folium_main.py
+```bash
+export GROQ_API_KEY="sua_chave_aqui"
+```
 
-### Visualização Pygame Desktop
-python pygame_main.py
+ou no Windows:
 
-### Visualização em Tempo Real com Streamlit
-python -m streamlit run folium_streamlit.py
-
----
-
-# Exemplo de Execução
-
-Ao executar `main.py`, será aberta:
-
-- **Janela Pygame**: Mapa de Ceilândia com pontos de atendimento, rota em evolução e painel lateral com detalhes
-- **Navegador**: Mapa Folium interativo que se atualiza automaticamente mostrando a rota otimizada
-
-O algoritmo genético roda continuamente, melhorando a rota em tempo real. Feche a janela Pygame para parar.
-
-# Exemplo de Execução
-
-Ao executar o sistema, será aberta uma janela contendo:
-
-- mapa do DF
-- pontos de atendimento
-- rota visual
-- lista de atendimento no painel lateral
+```bash
+set GROQ_API_KEY=sua_chave_aqui
+```
 
 ---
 
-Este projeto foi desenvolvido como parte do **Tech Challenge Fase 2**, com foco na aplicação de **otimização de rotas para atendimento especializado à mulher**, especificamente voltados ao atendimento e à segurança da mulher.
+### 4. Execute o projeto
+
+```bash
+python main.py
+```
 
 ---
 
-# Licença
+## 🎥 Demonstração
 
-Projeto desenvolvido para fins educacionais.
+O sistema inclui:
+
+- Evolução visual das rotas
+- Painel de decisão
+- Análise por IA
+
+---
+
+## 💡 Diferenciais do Projeto
+
+- VRP com restrições reais (não apenas TSP)
+- Frota heterogênea
+- Decodificação inteligente de cromossomos
+- Integração com IA para interpretação da solução
+- Aplicação com impacto social relevante
+
+---
+
+## 📌 Possíveis Evoluções
+
+- Integração com dados reais (SIG / APIs)
+- Otimização multiobjetivo
+- Interface web
+- Aprendizado adaptativo de penalidades
+- Simulação em tempo real
+
+---
+
+## 📄 Licença
+
+Uso acadêmico e educacional.
